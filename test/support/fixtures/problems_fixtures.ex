@@ -17,4 +17,22 @@ defmodule VrpBenchmarkDataService.ProblemsFixtures do
 
     problem
   end
+
+  @doc """
+  Generate a node.
+  """
+  def node_fixture(attrs \\ %{}) do
+    {:ok, node} =
+      attrs
+      |> Enum.into(%{
+        earliest_arrival_time: 42,
+        latest_departure_time: 42,
+        name: "some name",
+        service_time: 42,
+        volume_change: 42
+      })
+      |> VrpBenchmarkDataService.Problems.create_node()
+
+    node
+  end
 end

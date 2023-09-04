@@ -1,1 +1,2 @@
 mix phx.gen.context Problems Problem problems name:string
+mix phx.gen.context Problems Node nodes problem_id:references:problem name:string volume_change:integer service_time:integer earliest_arrival_time:integer latest_departure_time:integer
