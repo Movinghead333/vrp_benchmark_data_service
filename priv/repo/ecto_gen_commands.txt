@@ -2,3 +2,5 @@ mix phx.gen.context Problems Problem problems name:string
 mix phx.gen.context Problems Node nodes problem_id:references:problem name:string volume_change:integer service_time:integer earliest_arrival_time:integer latest_departure_time:integer
 mix phx.gen.context Problems Vehicle vehicles problem_id:references:problem capacity:integer start_node:references:nodes end_node:references:nodes
 mix phx.gen.context Problems MetricEntry metric_entries problem_id:references:problems from_node:references:nodes to_node:references:nodes travel_time:integer
+mix phx.gen.context Problems Precedence precendences problem_id:references:problems type:string
+mix phx.gen.context Problems PrecedenceNodeRelation precedence_node_relation precedence_id:references:precendences node_id:references:nodes is_preceeding:boolean

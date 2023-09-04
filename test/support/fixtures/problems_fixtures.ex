@@ -63,4 +63,32 @@ defmodule VrpBenchmarkDataService.ProblemsFixtures do
 
     metric_entry
   end
+
+  @doc """
+  Generate a precedence.
+  """
+  def precedence_fixture(attrs \\ %{}) do
+    {:ok, precedence} =
+      attrs
+      |> Enum.into(%{
+        type: "some type"
+      })
+      |> VrpBenchmarkDataService.Problems.create_precedence()
+
+    precedence
+  end
+
+  @doc """
+  Generate a precedence_node_relation.
+  """
+  def precedence_node_relation_fixture(attrs \\ %{}) do
+    {:ok, precedence_node_relation} =
+      attrs
+      |> Enum.into(%{
+        is_preceeding: true
+      })
+      |> VrpBenchmarkDataService.Problems.create_precedence_node_relation()
+
+    precedence_node_relation
+  end
 end

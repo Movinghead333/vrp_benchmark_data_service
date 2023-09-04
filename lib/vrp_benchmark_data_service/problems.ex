@@ -389,4 +389,196 @@ defmodule VrpBenchmarkDataService.Problems do
   def change_metric_entry(%MetricEntry{} = metric_entry, attrs \\ %{}) do
     MetricEntry.changeset(metric_entry, attrs)
   end
+
+  alias VrpBenchmarkDataService.Problems.Precedence
+
+  @doc """
+  Returns the list of precendences.
+
+  ## Examples
+
+      iex> list_precendences()
+      [%Precedence{}, ...]
+
+  """
+  def list_precendences do
+    Repo.all(Precedence)
+  end
+
+  @doc """
+  Gets a single precedence.
+
+  Raises `Ecto.NoResultsError` if the Precedence does not exist.
+
+  ## Examples
+
+      iex> get_precedence!(123)
+      %Precedence{}
+
+      iex> get_precedence!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_precedence!(id), do: Repo.get!(Precedence, id)
+
+  @doc """
+  Creates a precedence.
+
+  ## Examples
+
+      iex> create_precedence(%{field: value})
+      {:ok, %Precedence{}}
+
+      iex> create_precedence(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_precedence(attrs \\ %{}) do
+    %Precedence{}
+    |> Precedence.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a precedence.
+
+  ## Examples
+
+      iex> update_precedence(precedence, %{field: new_value})
+      {:ok, %Precedence{}}
+
+      iex> update_precedence(precedence, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_precedence(%Precedence{} = precedence, attrs) do
+    precedence
+    |> Precedence.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a precedence.
+
+  ## Examples
+
+      iex> delete_precedence(precedence)
+      {:ok, %Precedence{}}
+
+      iex> delete_precedence(precedence)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_precedence(%Precedence{} = precedence) do
+    Repo.delete(precedence)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking precedence changes.
+
+  ## Examples
+
+      iex> change_precedence(precedence)
+      %Ecto.Changeset{data: %Precedence{}}
+
+  """
+  def change_precedence(%Precedence{} = precedence, attrs \\ %{}) do
+    Precedence.changeset(precedence, attrs)
+  end
+
+  alias VrpBenchmarkDataService.Problems.PrecedenceNodeRelation
+
+  @doc """
+  Returns the list of precedence_node_relation.
+
+  ## Examples
+
+      iex> list_precedence_node_relation()
+      [%PrecedenceNodeRelation{}, ...]
+
+  """
+  def list_precedence_node_relation do
+    Repo.all(PrecedenceNodeRelation)
+  end
+
+  @doc """
+  Gets a single precedence_node_relation.
+
+  Raises `Ecto.NoResultsError` if the Precedence node relation does not exist.
+
+  ## Examples
+
+      iex> get_precedence_node_relation!(123)
+      %PrecedenceNodeRelation{}
+
+      iex> get_precedence_node_relation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_precedence_node_relation!(id), do: Repo.get!(PrecedenceNodeRelation, id)
+
+  @doc """
+  Creates a precedence_node_relation.
+
+  ## Examples
+
+      iex> create_precedence_node_relation(%{field: value})
+      {:ok, %PrecedenceNodeRelation{}}
+
+      iex> create_precedence_node_relation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_precedence_node_relation(attrs \\ %{}) do
+    %PrecedenceNodeRelation{}
+    |> PrecedenceNodeRelation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a precedence_node_relation.
+
+  ## Examples
+
+      iex> update_precedence_node_relation(precedence_node_relation, %{field: new_value})
+      {:ok, %PrecedenceNodeRelation{}}
+
+      iex> update_precedence_node_relation(precedence_node_relation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_precedence_node_relation(%PrecedenceNodeRelation{} = precedence_node_relation, attrs) do
+    precedence_node_relation
+    |> PrecedenceNodeRelation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a precedence_node_relation.
+
+  ## Examples
+
+      iex> delete_precedence_node_relation(precedence_node_relation)
+      {:ok, %PrecedenceNodeRelation{}}
+
+      iex> delete_precedence_node_relation(precedence_node_relation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_precedence_node_relation(%PrecedenceNodeRelation{} = precedence_node_relation) do
+    Repo.delete(precedence_node_relation)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking precedence_node_relation changes.
+
+  ## Examples
+
+      iex> change_precedence_node_relation(precedence_node_relation)
+      %Ecto.Changeset{data: %PrecedenceNodeRelation{}}
+
+  """
+  def change_precedence_node_relation(%PrecedenceNodeRelation{} = precedence_node_relation, attrs \\ %{}) do
+    PrecedenceNodeRelation.changeset(precedence_node_relation, attrs)
+  end
 end

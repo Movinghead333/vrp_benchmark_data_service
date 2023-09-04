@@ -1,4 +1,5 @@
 alias VrpBenchmarkDataService.Problems
+alias VrpBenchmarkDataService.Enums.PrecedenceType
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
@@ -144,4 +145,48 @@ Enum.with_index(p1_nodes, fn from_node, from_index ->
 
     {:ok, _metric_entry} = Problems.create_metric_entry(metric_entry_data)
   end)
+end)
+
+# Create precedences
+p1_precedence_data = [
+  %{
+    type: PrecedenceType.OneToOne.value(),
+    precedence_node_relation_data_list: [
+      %{
+        node_id: p1_n2.id,
+        is_preceeding: true
+      },
+      %{
+        node_id: p1_n1.id,
+        is_preceeding: false
+      }
+    ]
+  },
+  %{
+    type: PrecedenceType.OneToOne.value(),
+    precedence_node_relation_data_list: [
+      %{
+        node_id: p1_n2.id,
+        is_preceeding: true
+      },
+      %{
+        node_id: p1_n3.id,
+        is_preceeding: false
+      }
+    ]
+  }
+]
+
+Enum.each(p1_precedence_data, fn precedence_data ->
+  precedence_data = Map.put(precedence_data, :problem_id, p1.id)
+
+  {:ok, precedence} = Problems.create_precedence(precedence_data)
+
+  Enum.each(
+    Map.get(precedence_data, :precedence_node_relation_data_list),
+    fn precedence_node_relation_data ->
+      precedence_data = Map.put(precedence_data, :precedence_id, precedence.id)
+      {:ok, _precedence_node_relation} = Problems.create_precedence_node_relation(precedence_data)
+    end
+  )
 end)

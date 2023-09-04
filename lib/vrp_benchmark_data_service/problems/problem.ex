@@ -5,6 +5,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
   alias VrpBenchmarkDataService.Problems.MetricEntry
   alias VrpBenchmarkDataService.Problems.Node
   alias VrpBenchmarkDataService.Problems.Vehicle
+  alias VrpBenchmarkDataService.Problems.Precedence
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -14,6 +15,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
     has_many(:nodes, Node)
     has_many(:vehicles, Vehicle)
     has_many(:metric_entries, MetricEntry)
+    has_many(:precedences, Precedence)
 
     timestamps()
   end

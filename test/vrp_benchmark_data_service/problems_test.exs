@@ -226,4 +226,112 @@ defmodule VrpBenchmarkDataService.ProblemsTest do
       assert %Ecto.Changeset{} = Problems.change_metric_entry(metric_entry)
     end
   end
+
+  describe "precendences" do
+    alias VrpBenchmarkDataService.Problems.Precedence
+
+    import VrpBenchmarkDataService.ProblemsFixtures
+
+    @invalid_attrs %{type: nil}
+
+    test "list_precendences/0 returns all precendences" do
+      precedence = precedence_fixture()
+      assert Problems.list_precendences() == [precedence]
+    end
+
+    test "get_precedence!/1 returns the precedence with given id" do
+      precedence = precedence_fixture()
+      assert Problems.get_precedence!(precedence.id) == precedence
+    end
+
+    test "create_precedence/1 with valid data creates a precedence" do
+      valid_attrs = %{type: "some type"}
+
+      assert {:ok, %Precedence{} = precedence} = Problems.create_precedence(valid_attrs)
+      assert precedence.type == "some type"
+    end
+
+    test "create_precedence/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Problems.create_precedence(@invalid_attrs)
+    end
+
+    test "update_precedence/2 with valid data updates the precedence" do
+      precedence = precedence_fixture()
+      update_attrs = %{type: "some updated type"}
+
+      assert {:ok, %Precedence{} = precedence} = Problems.update_precedence(precedence, update_attrs)
+      assert precedence.type == "some updated type"
+    end
+
+    test "update_precedence/2 with invalid data returns error changeset" do
+      precedence = precedence_fixture()
+      assert {:error, %Ecto.Changeset{}} = Problems.update_precedence(precedence, @invalid_attrs)
+      assert precedence == Problems.get_precedence!(precedence.id)
+    end
+
+    test "delete_precedence/1 deletes the precedence" do
+      precedence = precedence_fixture()
+      assert {:ok, %Precedence{}} = Problems.delete_precedence(precedence)
+      assert_raise Ecto.NoResultsError, fn -> Problems.get_precedence!(precedence.id) end
+    end
+
+    test "change_precedence/1 returns a precedence changeset" do
+      precedence = precedence_fixture()
+      assert %Ecto.Changeset{} = Problems.change_precedence(precedence)
+    end
+  end
+
+  describe "precedence_node_relation" do
+    alias VrpBenchmarkDataService.Problems.PrecedenceNodeRelation
+
+    import VrpBenchmarkDataService.ProblemsFixtures
+
+    @invalid_attrs %{is_preceeding: nil}
+
+    test "list_precedence_node_relation/0 returns all precedence_node_relation" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      assert Problems.list_precedence_node_relation() == [precedence_node_relation]
+    end
+
+    test "get_precedence_node_relation!/1 returns the precedence_node_relation with given id" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      assert Problems.get_precedence_node_relation!(precedence_node_relation.id) == precedence_node_relation
+    end
+
+    test "create_precedence_node_relation/1 with valid data creates a precedence_node_relation" do
+      valid_attrs = %{is_preceeding: true}
+
+      assert {:ok, %PrecedenceNodeRelation{} = precedence_node_relation} = Problems.create_precedence_node_relation(valid_attrs)
+      assert precedence_node_relation.is_preceeding == true
+    end
+
+    test "create_precedence_node_relation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Problems.create_precedence_node_relation(@invalid_attrs)
+    end
+
+    test "update_precedence_node_relation/2 with valid data updates the precedence_node_relation" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      update_attrs = %{is_preceeding: false}
+
+      assert {:ok, %PrecedenceNodeRelation{} = precedence_node_relation} = Problems.update_precedence_node_relation(precedence_node_relation, update_attrs)
+      assert precedence_node_relation.is_preceeding == false
+    end
+
+    test "update_precedence_node_relation/2 with invalid data returns error changeset" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Problems.update_precedence_node_relation(precedence_node_relation, @invalid_attrs)
+      assert precedence_node_relation == Problems.get_precedence_node_relation!(precedence_node_relation.id)
+    end
+
+    test "delete_precedence_node_relation/1 deletes the precedence_node_relation" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      assert {:ok, %PrecedenceNodeRelation{}} = Problems.delete_precedence_node_relation(precedence_node_relation)
+      assert_raise Ecto.NoResultsError, fn -> Problems.get_precedence_node_relation!(precedence_node_relation.id) end
+    end
+
+    test "change_precedence_node_relation/1 returns a precedence_node_relation changeset" do
+      precedence_node_relation = precedence_node_relation_fixture()
+      assert %Ecto.Changeset{} = Problems.change_precedence_node_relation(precedence_node_relation)
+    end
+  end
 end
