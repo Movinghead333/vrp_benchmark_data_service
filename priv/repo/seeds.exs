@@ -11,6 +11,7 @@ alias VrpBenchmarkDataService.Problems
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+# Create problems
 problem_data_list = [
   %{
     name: "Testproblem 1"
@@ -28,6 +29,7 @@ problems =
 
 [p1, p2] = problems
 
+# Create nodes
 p1_node_data_list = [
   %{
     problem_id: p1.id,
@@ -86,3 +88,22 @@ p1_nodes =
   end
 
 [p1_vs1, p1_ve1, p1_d, p1_n1, p1_n2, p1_n3] = p1_nodes
+
+# Create vehicles
+p1_vehicle_data_list = [
+  %{
+    name: "V1",
+    capacity: 10,
+    problem_id: p1.id,
+    start_node_id: p1_vs1.id,
+    end_node_id: p1_ve1.id
+  }
+]
+
+p1_vehicles =
+  for vehicle_data in p1_vehicle_data_list do
+    {:ok, vehicle} = Problems.create_vehicle(vehicle_data)
+    vehicle
+  end
+
+[p1_v1] = p1_vehicles

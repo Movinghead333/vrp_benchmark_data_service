@@ -35,4 +35,18 @@ defmodule VrpBenchmarkDataService.ProblemsFixtures do
 
     node
   end
+
+  @doc """
+  Generate a vehicle.
+  """
+  def vehicle_fixture(attrs \\ %{}) do
+    {:ok, vehicle} =
+      attrs
+      |> Enum.into(%{
+        capacity: 42
+      })
+      |> VrpBenchmarkDataService.Problems.create_vehicle()
+
+    vehicle
+  end
 end

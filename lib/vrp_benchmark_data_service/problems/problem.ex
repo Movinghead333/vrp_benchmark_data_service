@@ -3,6 +3,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
   import Ecto.Changeset
 
   alias VrpBenchmarkDataService.Problems.Node
+  alias VrpBenchmarkDataService.Problems.Vehicle
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,6 +11,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
     field(:name, :string)
 
     has_many(:nodes, Node)
+    has_many(:vehicles, Vehicle)
 
     timestamps()
   end

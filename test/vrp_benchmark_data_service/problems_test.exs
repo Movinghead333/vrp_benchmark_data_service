@@ -118,4 +118,58 @@ defmodule VrpBenchmarkDataService.ProblemsTest do
       assert %Ecto.Changeset{} = Problems.change_node(node)
     end
   end
+
+  describe "vehicles" do
+    alias VrpBenchmarkDataService.Problems.Vehicle
+
+    import VrpBenchmarkDataService.ProblemsFixtures
+
+    @invalid_attrs %{capacity: nil}
+
+    test "list_vehicles/0 returns all vehicles" do
+      vehicle = vehicle_fixture()
+      assert Problems.list_vehicles() == [vehicle]
+    end
+
+    test "get_vehicle!/1 returns the vehicle with given id" do
+      vehicle = vehicle_fixture()
+      assert Problems.get_vehicle!(vehicle.id) == vehicle
+    end
+
+    test "create_vehicle/1 with valid data creates a vehicle" do
+      valid_attrs = %{capacity: 42}
+
+      assert {:ok, %Vehicle{} = vehicle} = Problems.create_vehicle(valid_attrs)
+      assert vehicle.capacity == 42
+    end
+
+    test "create_vehicle/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Problems.create_vehicle(@invalid_attrs)
+    end
+
+    test "update_vehicle/2 with valid data updates the vehicle" do
+      vehicle = vehicle_fixture()
+      update_attrs = %{capacity: 43}
+
+      assert {:ok, %Vehicle{} = vehicle} = Problems.update_vehicle(vehicle, update_attrs)
+      assert vehicle.capacity == 43
+    end
+
+    test "update_vehicle/2 with invalid data returns error changeset" do
+      vehicle = vehicle_fixture()
+      assert {:error, %Ecto.Changeset{}} = Problems.update_vehicle(vehicle, @invalid_attrs)
+      assert vehicle == Problems.get_vehicle!(vehicle.id)
+    end
+
+    test "delete_vehicle/1 deletes the vehicle" do
+      vehicle = vehicle_fixture()
+      assert {:ok, %Vehicle{}} = Problems.delete_vehicle(vehicle)
+      assert_raise Ecto.NoResultsError, fn -> Problems.get_vehicle!(vehicle.id) end
+    end
+
+    test "change_vehicle/1 returns a vehicle changeset" do
+      vehicle = vehicle_fixture()
+      assert %Ecto.Changeset{} = Problems.change_vehicle(vehicle)
+    end
+  end
 end

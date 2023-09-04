@@ -12,7 +12,7 @@ defmodule VrpBenchmarkDataService.Problems.Node do
     field(:name, :string)
     field(:service_time, :integer)
     field(:volume_change, :integer)
-    belongs_to(:problems, Problem)
+    belongs_to(:problem, Problem)
 
     timestamps()
   end
@@ -25,14 +25,16 @@ defmodule VrpBenchmarkDataService.Problems.Node do
       :volume_change,
       :service_time,
       :earliest_arrival_time,
-      :latest_departure_time
+      :latest_departure_time,
+      :problem_id
     ])
     |> validate_required([
       :name,
       :volume_change,
       :service_time,
       :earliest_arrival_time,
-      :latest_departure_time
+      :latest_departure_time,
+      :problem_id
     ])
   end
 end
