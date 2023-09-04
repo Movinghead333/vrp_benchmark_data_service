@@ -1,0 +1,1 @@
+mix phx.gen.json Problems Problem problems name:string --no-context --no-schema
