@@ -34,6 +34,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "VS1",
+    x_pos: 0,
+    y_pos: 0,
     volume_change: 0,
     service_time: 0,
     earliest_arrival_time: 0,
@@ -42,6 +44,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "VE1",
+    x_pos: 5,
+    y_pos: 0,
     volume_change: 0,
     service_time: 0,
     earliest_arrival_time: 0,
@@ -50,6 +54,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "D",
+    x_pos: 1,
+    y_pos: 0,
     volume_change: 0,
     service_time: 10,
     earliest_arrival_time: 0,
@@ -58,6 +64,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "N1",
+    x_pos: 2,
+    y_pos: 0,
     volume_change: 0,
     service_time: 10,
     earliest_arrival_time: 0,
@@ -66,6 +74,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "N2",
+    x_pos: 3,
+    y_pos: 0,
     volume_change: 0,
     service_time: 10,
     earliest_arrival_time: 0,
@@ -74,6 +84,8 @@ p1_node_data_list = [
   %{
     problem_id: p1.id,
     name: "N3",
+    x_pos: 4,
+    y_pos: 0,
     volume_change: 0,
     service_time: 10,
     earliest_arrival_time: 0,

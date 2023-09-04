@@ -7,9 +7,11 @@ defmodule VrpBenchmarkDataService.Problems.Node do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "nodes" do
+    field(:name, :string)
+    field(:x_pos, :float)
+    field(:y_pos, :float)
     field(:earliest_arrival_time, :integer)
     field(:latest_departure_time, :integer)
-    field(:name, :string)
     field(:service_time, :integer)
     field(:volume_change, :integer)
     belongs_to(:problem, Problem)
@@ -22,6 +24,8 @@ defmodule VrpBenchmarkDataService.Problems.Node do
     node
     |> cast(attrs, [
       :name,
+      :x_pos,
+      :y_pos,
       :volume_change,
       :service_time,
       :earliest_arrival_time,
@@ -30,6 +34,8 @@ defmodule VrpBenchmarkDataService.Problems.Node do
     ])
     |> validate_required([
       :name,
+      :x_pos,
+      :y_pos,
       :volume_change,
       :service_time,
       :earliest_arrival_time,

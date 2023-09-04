@@ -5,6 +5,8 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateNodes do
     create table(:nodes, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :name, :string
+      add :x_pos, :float
+      add :y_pos, :float
       add :volume_change, :integer
       add :service_time, :integer
       add :earliest_arrival_time, :integer
