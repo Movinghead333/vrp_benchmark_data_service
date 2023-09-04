@@ -101,9 +101,35 @@ p1_vehicle_data_list = [
 ]
 
 p1_vehicles =
-  for vehicle_data in p1_vehicle_data_list do
+  for vehicle_data <- p1_vehicle_data_list do
     {:ok, vehicle} = Problems.create_vehicle(vehicle_data)
     vehicle
   end
 
 [p1_v1] = p1_vehicles
+
+# Create metric_entries
+p1_travel_time_matrix = [
+  [0, 1, 2, 3, 4, 5],
+  [1, 0, 1, 2, 3, 4],
+  [2, 1, 0, 1, 2, 3],
+  [3, 2, 1, 0, 1, 2],
+  [4, 3, 2, 1, 0, 1],
+  [5, 4, 3, 2, 1, 0]
+]
+
+Enum.with_index(p1_nodes, fn from_node, from_index ->
+  Enum.with_index(p1_nodes, fn to_node, to_index ->
+    travel_time_row = Enum.at(p1_travel_time_matrix, from_index)
+    travel_time = Enum.at(travel_time_row, to_index)
+
+    metric_entry_data = %{
+      travel_time: travel_time,
+      problem_id: p1.id,
+      from_node_id: from_node.id,
+      to_node_id: to_node.id
+    }
+
+    {:ok, _metric_entry} = Problems.create_metric_entry(metric_entry_data)
+  end)
+end)

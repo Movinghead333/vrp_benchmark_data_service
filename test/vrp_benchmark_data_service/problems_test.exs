@@ -172,4 +172,58 @@ defmodule VrpBenchmarkDataService.ProblemsTest do
       assert %Ecto.Changeset{} = Problems.change_vehicle(vehicle)
     end
   end
+
+  describe "metric_entries" do
+    alias VrpBenchmarkDataService.Problems.MetricEntry
+
+    import VrpBenchmarkDataService.ProblemsFixtures
+
+    @invalid_attrs %{travel_time: nil}
+
+    test "list_metric_entries/0 returns all metric_entries" do
+      metric_entry = metric_entry_fixture()
+      assert Problems.list_metric_entries() == [metric_entry]
+    end
+
+    test "get_metric_entry!/1 returns the metric_entry with given id" do
+      metric_entry = metric_entry_fixture()
+      assert Problems.get_metric_entry!(metric_entry.id) == metric_entry
+    end
+
+    test "create_metric_entry/1 with valid data creates a metric_entry" do
+      valid_attrs = %{travel_time: 42}
+
+      assert {:ok, %MetricEntry{} = metric_entry} = Problems.create_metric_entry(valid_attrs)
+      assert metric_entry.travel_time == 42
+    end
+
+    test "create_metric_entry/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Problems.create_metric_entry(@invalid_attrs)
+    end
+
+    test "update_metric_entry/2 with valid data updates the metric_entry" do
+      metric_entry = metric_entry_fixture()
+      update_attrs = %{travel_time: 43}
+
+      assert {:ok, %MetricEntry{} = metric_entry} = Problems.update_metric_entry(metric_entry, update_attrs)
+      assert metric_entry.travel_time == 43
+    end
+
+    test "update_metric_entry/2 with invalid data returns error changeset" do
+      metric_entry = metric_entry_fixture()
+      assert {:error, %Ecto.Changeset{}} = Problems.update_metric_entry(metric_entry, @invalid_attrs)
+      assert metric_entry == Problems.get_metric_entry!(metric_entry.id)
+    end
+
+    test "delete_metric_entry/1 deletes the metric_entry" do
+      metric_entry = metric_entry_fixture()
+      assert {:ok, %MetricEntry{}} = Problems.delete_metric_entry(metric_entry)
+      assert_raise Ecto.NoResultsError, fn -> Problems.get_metric_entry!(metric_entry.id) end
+    end
+
+    test "change_metric_entry/1 returns a metric_entry changeset" do
+      metric_entry = metric_entry_fixture()
+      assert %Ecto.Changeset{} = Problems.change_metric_entry(metric_entry)
+    end
+  end
 end

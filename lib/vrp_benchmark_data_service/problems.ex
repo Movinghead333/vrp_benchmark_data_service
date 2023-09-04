@@ -293,4 +293,100 @@ defmodule VrpBenchmarkDataService.Problems do
   def change_vehicle(%Vehicle{} = vehicle, attrs \\ %{}) do
     Vehicle.changeset(vehicle, attrs)
   end
+
+  alias VrpBenchmarkDataService.Problems.MetricEntry
+
+  @doc """
+  Returns the list of metric_entries.
+
+  ## Examples
+
+      iex> list_metric_entries()
+      [%MetricEntry{}, ...]
+
+  """
+  def list_metric_entries do
+    Repo.all(MetricEntry)
+  end
+
+  @doc """
+  Gets a single metric_entry.
+
+  Raises `Ecto.NoResultsError` if the Metric entry does not exist.
+
+  ## Examples
+
+      iex> get_metric_entry!(123)
+      %MetricEntry{}
+
+      iex> get_metric_entry!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_metric_entry!(id), do: Repo.get!(MetricEntry, id)
+
+  @doc """
+  Creates a metric_entry.
+
+  ## Examples
+
+      iex> create_metric_entry(%{field: value})
+      {:ok, %MetricEntry{}}
+
+      iex> create_metric_entry(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_metric_entry(attrs \\ %{}) do
+    %MetricEntry{}
+    |> MetricEntry.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a metric_entry.
+
+  ## Examples
+
+      iex> update_metric_entry(metric_entry, %{field: new_value})
+      {:ok, %MetricEntry{}}
+
+      iex> update_metric_entry(metric_entry, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_metric_entry(%MetricEntry{} = metric_entry, attrs) do
+    metric_entry
+    |> MetricEntry.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a metric_entry.
+
+  ## Examples
+
+      iex> delete_metric_entry(metric_entry)
+      {:ok, %MetricEntry{}}
+
+      iex> delete_metric_entry(metric_entry)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_metric_entry(%MetricEntry{} = metric_entry) do
+    Repo.delete(metric_entry)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking metric_entry changes.
+
+  ## Examples
+
+      iex> change_metric_entry(metric_entry)
+      %Ecto.Changeset{data: %MetricEntry{}}
+
+  """
+  def change_metric_entry(%MetricEntry{} = metric_entry, attrs \\ %{}) do
+    MetricEntry.changeset(metric_entry, attrs)
+  end
 end

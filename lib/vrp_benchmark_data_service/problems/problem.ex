@@ -2,6 +2,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias VrpBenchmarkDataService.Problems.MetricEntry
   alias VrpBenchmarkDataService.Problems.Node
   alias VrpBenchmarkDataService.Problems.Vehicle
 
@@ -12,6 +13,7 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
 
     has_many(:nodes, Node)
     has_many(:vehicles, Vehicle)
+    has_many(:metric_entries, MetricEntry)
 
     timestamps()
   end

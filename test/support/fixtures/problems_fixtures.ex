@@ -49,4 +49,18 @@ defmodule VrpBenchmarkDataService.ProblemsFixtures do
 
     vehicle
   end
+
+  @doc """
+  Generate a metric_entry.
+  """
+  def metric_entry_fixture(attrs \\ %{}) do
+    {:ok, metric_entry} =
+      attrs
+      |> Enum.into(%{
+        travel_time: 42
+      })
+      |> VrpBenchmarkDataService.Problems.create_metric_entry()
+
+    metric_entry
+  end
 end

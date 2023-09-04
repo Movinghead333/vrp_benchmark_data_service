@@ -7,14 +7,14 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateVehicles do
       add(:name, :string)
       add(:capacity, :integer)
       add(:problem_id, references(:problems, on_delete: :nothing, type: :binary_id))
-      add(:start_node, references(:nodes, on_delete: :nothing, type: :binary_id))
-      add(:end_node, references(:nodes, on_delete: :nothing, type: :binary_id))
+      add(:start_node_id, references(:nodes, on_delete: :nothing, type: :binary_id))
+      add(:end_node_id, references(:nodes, on_delete: :nothing, type: :binary_id))
 
       timestamps()
     end
 
     create(index(:vehicles, [:problem_id]))
-    create(index(:vehicles, [:start_node]))
-    create(index(:vehicles, [:end_node]))
+    create(index(:vehicles, [:start_node_id]))
+    create(index(:vehicles, [:end_node_id]))
   end
 end
