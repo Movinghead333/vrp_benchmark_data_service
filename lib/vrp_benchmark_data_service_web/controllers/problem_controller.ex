@@ -4,15 +4,15 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
   alias VrpBenchmarkDataService.Problems
   alias VrpBenchmarkDataService.Problems.Problem
 
-  action_fallback VrpBenchmarkDataServiceWeb.FallbackController
+  action_fallback(VrpBenchmarkDataServiceWeb.FallbackController)
 
   def index(conn, _params) do
     problems = Problems.list_problems()
     render(conn, :index, problems: problems)
   end
 
-  def create(conn, %{"problem" => problem_params}) do
-    with {:ok, %Problem{} = problem} <- Problems.create_problem(problem_params) do
+  def create(conn, problem_json) do
+    with {:ok, %Problem{} = problem} <- Problems.create_complete_problem(problem_json) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/problems/#{problem}")
@@ -36,7 +36,10 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
   def delete(conn, %{"id" => id}) do
     problem = Problems.get_problem!(id)
 
-    with {:ok, %Problem{}} <- Problems.delete_problem(problem) do
+    result = Problems.delete_problem(problem)
+    IO.inspect(result)
+
+    with {:ok, %Problem{}} <- result do
       send_resp(conn, :no_content, "")
     end
   end

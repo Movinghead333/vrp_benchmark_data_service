@@ -587,18 +587,20 @@ defmodule VrpBenchmarkDataService.Problems do
 
   # -------------------- Custom Functions Begin --------------------
   def create_complete_problem(%{
-        problem_data: problem_data,
-        node_data_list: node_data_list,
-        vehicles_data_list: vehicle_data_list,
-        travel_time_matrix: travel_time_matrix,
-        precedence_data_list: precedence_data_list
+        "problem_data" => problem_data,
+        "node_data_list" => node_data_list,
+        "vehicles_data_list" => vehicle_data_list,
+        "travel_time_matrix" => travel_time_matrix,
+        "precedence_data_list" => precedence_data_list
       }) do
+    IO.inspect(problem_data)
+
     {:ok, problem} = create_problem(problem_data)
 
     # Create nodes
     nodes =
       for node_data <- node_data_list do
-        node_data = Map.put(node_data, :problem_id, problem.id)
+        node_data = Map.put(node_data, "problem_id", problem.id)
         {:ok, node} = create_node(node_data)
         node
       end
@@ -611,16 +613,16 @@ defmodule VrpBenchmarkDataService.Problems do
     # Create vehicles
     _vehicles =
       for vehicle_data <- vehicle_data_list do
-        start_node_name = Map.get(vehicle_data, :start_node_name)
+        start_node_name = Map.get(vehicle_data, "start_node_name")
         start_node_id = Map.get(node_map, start_node_name)
-        end_node_name = Map.get(vehicle_data, :end_node_name)
+        end_node_name = Map.get(vehicle_data, "end_node_name")
         end_node_id = Map.get(node_map, end_node_name)
 
         vehicle_data =
           vehicle_data
-          |> Map.put(:problem_id, problem.id)
-          |> Map.put(:start_node_id, start_node_id)
-          |> Map.put(:end_node_id, end_node_id)
+          |> Map.put("problem_id", problem.id)
+          |> Map.put("start_node_id", start_node_id)
+          |> Map.put("end_node_id", end_node_id)
 
         {:ok, vehicle} = create_vehicle(vehicle_data)
         vehicle
@@ -633,10 +635,10 @@ defmodule VrpBenchmarkDataService.Problems do
         travel_time = Enum.at(travel_time_row, to_index)
 
         metric_entry_data = %{
-          travel_time: travel_time,
-          problem_id: problem.id,
-          from_node_id: from_node.id,
-          to_node_id: to_node.id
+          "travel_time" => travel_time,
+          "problem_id" => problem.id,
+          "from_node_id" => from_node.id,
+          "to_node_id" => to_node.id
         }
 
         {:ok, _metric_entry} = create_metric_entry(metric_entry_data)
@@ -645,26 +647,28 @@ defmodule VrpBenchmarkDataService.Problems do
 
     # Create precedences
     Enum.each(precedence_data_list, fn precedence_data ->
-      precedence_data = Map.put(precedence_data, :problem_id, problem.id)
+      precedence_data = Map.put(precedence_data, "problem_id", problem.id)
 
       {:ok, precedence} = create_precedence(precedence_data)
 
       Enum.each(
-        Map.get(precedence_data, :precedence_node_relation_data_list),
+        Map.get(precedence_data, "precedence_node_relation_data_list"),
         fn precedence_node_relation_data ->
           precedence_node_relation_data =
-            Map.put(precedence_node_relation_data, :precedence_id, precedence.id)
+            Map.put(precedence_node_relation_data, "precedence_id", precedence.id)
 
           # Convert node name to id
-          node_name = Map.get(precedence_node_relation_data, :node_name)
+          node_name = Map.get(precedence_node_relation_data, "node_name")
           node_id = Map.get(node_map, node_name)
-          Map.put(precedence_node_relation_data, :node_id, node_id)
+          Map.put(precedence_node_relation_data, "node_id", node_id)
 
           {:ok, _precedence_node_relation} =
             create_precedence_node_relation(precedence_node_relation_data)
         end
       )
     end)
+
+    {:ok, problem}
   end
 
   # --------------------- Custom Functions End ---------------------
