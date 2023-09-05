@@ -8,7 +8,7 @@ defmodule VrpBenchmarkDataService.Problems.MetricEntry do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "metric_entries" do
-    field(:travel_time, :integer)
+    field(:travel_time, :float)
     belongs_to(:problem, Problem)
     belongs_to(:from_node, Node, type: :binary_id)
     belongs_to(:to_node, Node, type: :binary_id)
