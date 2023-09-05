@@ -660,7 +660,9 @@ defmodule VrpBenchmarkDataService.Problems do
           # Convert node name to id
           node_name = Map.get(precedence_node_relation_data, "node_name")
           node_id = Map.get(node_map, node_name)
-          Map.put(precedence_node_relation_data, "node_id", node_id)
+
+          precedence_node_relation_data =
+            Map.put(precedence_node_relation_data, "node_id", node_id)
 
           {:ok, _precedence_node_relation} =
             create_precedence_node_relation(precedence_node_relation_data)

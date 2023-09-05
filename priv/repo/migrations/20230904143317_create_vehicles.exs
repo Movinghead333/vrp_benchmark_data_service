@@ -6,7 +6,7 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateVehicles do
       add(:id, :binary_id, primary_key: true)
       add(:name, :string)
       add(:capacity, :integer)
-      add(:problem_id, references(:problems, on_delete: :nothing, type: :binary_id))
+      add(:problem_id, references(:problems, on_delete: :delete_all, type: :binary_id))
       add(:start_node_id, references(:nodes, on_delete: :nothing, type: :binary_id))
       add(:end_node_id, references(:nodes, on_delete: :nothing, type: :binary_id))
 
