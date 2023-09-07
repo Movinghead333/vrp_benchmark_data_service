@@ -1,5 +1,6 @@
 alias VrpBenchmarkDataService.Problems
 alias VrpBenchmarkDataService.Enums.PrecedenceType
+alias VrpBenchmarkDataService.Solutions
 alias VrpBenchmarkDataService.Solvers
 # Script for populating the database. You can run it as:
 #
@@ -13,7 +14,8 @@ alias VrpBenchmarkDataService.Solvers
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-test_problem_1_complete_problem_data = %{
+# Create problem
+problem_1_complete_problem_data = %{
   "problem_data" => %{
     "name" => "Test Problem 1"
   },
@@ -119,7 +121,7 @@ test_problem_1_complete_problem_data = %{
   ]
 }
 
-Problems.create_complete_problem(test_problem_1_complete_problem_data)
+{:ok, problem_1} = Problems.create_complete_problem(problem_1_complete_problem_data)
 
 # Create solver
 solver_data = %{
@@ -127,18 +129,17 @@ solver_data = %{
   "version" => "1.0.0",
   "parameter_specs" => [
     %{
-      "name" => "tso_iterations",
+      "name" => "iterations",
       "type" => "integer"
     }
   ]
 }
 
-{:ok, g_swo_solver} = Solvers.create_solver(solver_data)
+{:ok, solver_1} = Solvers.create_solver(solver_data)
 
 solver_parameter_specs_map =
   Enum.reduce(Map.get(solver_data, "parameter_specs"), %{}, fn solver_parameter_spec_data, acc ->
-    solver_parameter_spec_data =
-      Map.put_new(solver_parameter_spec_data, "solver_id", g_swo_solver.id)
+    solver_parameter_spec_data = Map.put_new(solver_parameter_spec_data, "solver_id", solver_1.id)
 
     {:ok, solver_parameter_spec} =
       Solvers.create_solver_parameter_spec(solver_parameter_spec_data)
@@ -146,25 +147,60 @@ solver_parameter_specs_map =
     Map.put(acc, Map.get(solver_parameter_spec_data, "name"), solver_parameter_spec)
   end)
 
-g_swo_solver_instance_data = %{
-  "solver_id" => g_swo_solver.id
+solver_1_instance_1_data = %{
+  "solver_id" => solver_1.id
 }
 
-{:ok, g_swo_solver_instance} = Solvers.create_solver_instance(g_swo_solver_instance_data)
+{:ok, solver_1_instance_1} = Solvers.create_solver_instance(solver_1_instance_1_data)
 
 solver_parameter_instance_data_map = %{
-  "tso_iterations" => "20"
+  "iterations" => "100"
 }
 
 Enum.each(solver_parameter_instance_data_map, fn {parameter_name, parameter_value} ->
   solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
 
   solver_parameter_instance_data = %{
-    "solver_instance_id" => g_swo_solver_instance.id,
+    "solver_instance_id" => solver_1_instance_1.id,
     "solver_parameter_spec_id" => solver_parameter_spec_id,
     "value" => parameter_value
   }
 
   {:ok, _solver_parameter_instance} =
     Solvers.create_solver_parameter_instance(solver_parameter_instance_data)
+end)
+
+# Create solution
+problem_1_solver_1_instance_1_solution_1_data = %{
+  "problem_id" => problem_1.id,
+  "solver_instance_id" => solver_1_instance_1.id,
+  "is_valid" => true,
+  "computation_time" => 1.5,
+  "objective_value" => 10.0,
+  "penalized_objective_value" => 10.0,
+  "routes" => [
+    ["VS1", "D", "N2", "N3", "N1", "VE1"]
+  ]
+}
+
+{:ok, solution_1} = Solutions.create_solution(problem_1_solver_1_instance_1_solution_1_data)
+
+Enum.each(Map.get(problem_1_solver_1_instance_1_solution_1_data, "routes"), fn node_names_list ->
+  number_of_nodes = length(node_names_list)
+  start_node_name = Enum.at(node_names_list, 0)
+  end_node_name = Enum.at(node_names_list, -1)
+
+  vehicle =
+    Problems.get_vehicle_for_problem_start_and_end_nodes(
+      problem_1.name,
+      start_node_name,
+      end_node_name
+    )
+
+  route_data = %{
+    "solution_id" => solution_1.id,
+    "vehicle_id" => vehicle.id,
+    "duration" => 10,
+    "number_of_nodes" => number_of_nodes
+  }
 end)

@@ -673,5 +673,22 @@ defmodule VrpBenchmarkDataService.Problems do
     {:ok, problem}
   end
 
+  def get_vehicle_for_problem_start_and_end_nodes(problem_name, start_node_name, end_node_name) do
+    query =
+      from(vehicle in Vehicle,
+        join: problem in Problem,
+        on: vehicle.problem_id == problem.id,
+        join: start_node in Node,
+        on: vehicle.start_node_id == start_node.id,
+        join: end_node in Node,
+        on: vehicle.end_node_id == end_node.id,
+        where: problem.name >= ^problem_name,
+        where: start_node.name == ^start_node_name,
+        where: end_node.name == ^end_node_name
+      )
+
+    Repo.one(query)
+  end
+
   # --------------------- Custom Functions End ---------------------
 end

@@ -9,3 +9,7 @@ mix phx.gen.context Solvers Solver solvers name:string version:string
 mix phx.gen.context Solvers SolverParameterSpec solver_parameter_specs solver_id:references:solvers name:string type:string
 mix phx.gen.context Solvers SolverInstance solver_instances solver_id:references:solvers
 mix phx.gen.context Solvers SolverParameterInstance solver_parameter_instances solver_instance_id:references:solver_instances solver_parameter_spec_id:references:solver_parameter_specs value:string
+
+mix phx.gen.context Solutions Solution solutions problem_id:references:problems solver_instance_id:references:solver_instances is_valid:boolean computation_time:float objective_value:float penalized_objective_value:float
+mix phx.gen.context Solutions Route routes solution_id:references:solutions vehicle_id:references:vehicles duration:integer number_of_nodes:integer
+mix phx.gen.context Solutions RouteNodeRelation route_node_relation route_id:references:routes node_id:references:nodes index_in_route:integer
