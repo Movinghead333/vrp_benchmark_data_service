@@ -1,5 +1,6 @@
 alias VrpBenchmarkDataService.Problems
 alias VrpBenchmarkDataService.Enums.PrecedenceType
+alias VrpBenchmarkDataService.Solvers
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
@@ -119,3 +120,17 @@ test_problem_1_complete_problem_data = %{
 }
 
 Problems.create_complete_problem(test_problem_1_complete_problem_data)
+
+# Create solver
+solver_data = %{
+  "name" => "G_SWO",
+  "version" => "1.0.0",
+  "parameters" => [
+    %{
+      "name" => "tso_iterations",
+      "type" => "integer"
+    }
+  ]
+}
+
+{:ok, g_swo_solver} = Solvers.create_solver(solver_data)

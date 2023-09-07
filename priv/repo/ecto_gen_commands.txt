@@ -4,3 +4,8 @@ mix phx.gen.context Problems Vehicle vehicles problem_id:references:problem capa
 mix phx.gen.context Problems MetricEntry metric_entries problem_id:references:problems from_node:references:nodes to_node:references:nodes travel_time:integer
 mix phx.gen.context Problems Precedence precendences problem_id:references:problems type:string
 mix phx.gen.context Problems PrecedenceNodeRelation precedence_node_relation precedence_id:references:precendences node_id:references:nodes is_preceeding:boolean
+
+mix phx.gen.context Solvers Solver solvers name:string version:string
+mix phx.gen.context Solvers SolverInstance solver_instances solver_id:references:solvers
+mix phx.gen.context Solvers SolverParameterSpec solver_parameter_specs solver_id:references:solvers name:string type:string
+mix phx.gen.context Solvers SolverParameterInstance solver_parameter_instances
