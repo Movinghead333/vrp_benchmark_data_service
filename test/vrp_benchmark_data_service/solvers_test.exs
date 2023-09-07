@@ -114,4 +114,56 @@ defmodule VrpBenchmarkDataService.SolversTest do
       assert %Ecto.Changeset{} = Solvers.change_solver_parameter_spec(solver_parameter_spec)
     end
   end
+
+  describe "solver_instances" do
+    alias VrpBenchmarkDataService.Solvers.SolverInstance
+
+    import VrpBenchmarkDataService.SolversFixtures
+
+    @invalid_attrs %{}
+
+    test "list_solver_instances/0 returns all solver_instances" do
+      solver_instance = solver_instance_fixture()
+      assert Solvers.list_solver_instances() == [solver_instance]
+    end
+
+    test "get_solver_instance!/1 returns the solver_instance with given id" do
+      solver_instance = solver_instance_fixture()
+      assert Solvers.get_solver_instance!(solver_instance.id) == solver_instance
+    end
+
+    test "create_solver_instance/1 with valid data creates a solver_instance" do
+      valid_attrs = %{}
+
+      assert {:ok, %SolverInstance{} = solver_instance} = Solvers.create_solver_instance(valid_attrs)
+    end
+
+    test "create_solver_instance/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Solvers.create_solver_instance(@invalid_attrs)
+    end
+
+    test "update_solver_instance/2 with valid data updates the solver_instance" do
+      solver_instance = solver_instance_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %SolverInstance{} = solver_instance} = Solvers.update_solver_instance(solver_instance, update_attrs)
+    end
+
+    test "update_solver_instance/2 with invalid data returns error changeset" do
+      solver_instance = solver_instance_fixture()
+      assert {:error, %Ecto.Changeset{}} = Solvers.update_solver_instance(solver_instance, @invalid_attrs)
+      assert solver_instance == Solvers.get_solver_instance!(solver_instance.id)
+    end
+
+    test "delete_solver_instance/1 deletes the solver_instance" do
+      solver_instance = solver_instance_fixture()
+      assert {:ok, %SolverInstance{}} = Solvers.delete_solver_instance(solver_instance)
+      assert_raise Ecto.NoResultsError, fn -> Solvers.get_solver_instance!(solver_instance.id) end
+    end
+
+    test "change_solver_instance/1 returns a solver_instance changeset" do
+      solver_instance = solver_instance_fixture()
+      assert %Ecto.Changeset{} = Solvers.change_solver_instance(solver_instance)
+    end
+  end
 end

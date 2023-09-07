@@ -197,4 +197,100 @@ defmodule VrpBenchmarkDataService.Solvers do
   def change_solver_parameter_spec(%SolverParameterSpec{} = solver_parameter_spec, attrs \\ %{}) do
     SolverParameterSpec.changeset(solver_parameter_spec, attrs)
   end
+
+  alias VrpBenchmarkDataService.Solvers.SolverInstance
+
+  @doc """
+  Returns the list of solver_instances.
+
+  ## Examples
+
+      iex> list_solver_instances()
+      [%SolverInstance{}, ...]
+
+  """
+  def list_solver_instances do
+    Repo.all(SolverInstance)
+  end
+
+  @doc """
+  Gets a single solver_instance.
+
+  Raises `Ecto.NoResultsError` if the Solver instance does not exist.
+
+  ## Examples
+
+      iex> get_solver_instance!(123)
+      %SolverInstance{}
+
+      iex> get_solver_instance!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_solver_instance!(id), do: Repo.get!(SolverInstance, id)
+
+  @doc """
+  Creates a solver_instance.
+
+  ## Examples
+
+      iex> create_solver_instance(%{field: value})
+      {:ok, %SolverInstance{}}
+
+      iex> create_solver_instance(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_solver_instance(attrs \\ %{}) do
+    %SolverInstance{}
+    |> SolverInstance.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a solver_instance.
+
+  ## Examples
+
+      iex> update_solver_instance(solver_instance, %{field: new_value})
+      {:ok, %SolverInstance{}}
+
+      iex> update_solver_instance(solver_instance, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_solver_instance(%SolverInstance{} = solver_instance, attrs) do
+    solver_instance
+    |> SolverInstance.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a solver_instance.
+
+  ## Examples
+
+      iex> delete_solver_instance(solver_instance)
+      {:ok, %SolverInstance{}}
+
+      iex> delete_solver_instance(solver_instance)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_solver_instance(%SolverInstance{} = solver_instance) do
+    Repo.delete(solver_instance)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking solver_instance changes.
+
+  ## Examples
+
+      iex> change_solver_instance(solver_instance)
+      %Ecto.Changeset{data: %SolverInstance{}}
+
+  """
+  def change_solver_instance(%SolverInstance{} = solver_instance, attrs \\ %{}) do
+    SolverInstance.changeset(solver_instance, attrs)
+  end
 end

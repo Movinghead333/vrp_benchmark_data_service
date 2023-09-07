@@ -145,3 +145,9 @@ solver_parameter_specs_map =
 
     Map.put(acc, Map.get(solver_parameter_spec_data, "name"), solver_parameter_spec)
   end)
+
+g_swo_solver_instance_data = %{
+  "solver_id" => g_swo_solver.id
+}
+
+{:ok, g_swo_solver_instance} = Solvers.create_solver_instance(g_swo_solver_instance_data)
