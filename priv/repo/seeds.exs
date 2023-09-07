@@ -151,3 +151,20 @@ g_swo_solver_instance_data = %{
 }
 
 {:ok, g_swo_solver_instance} = Solvers.create_solver_instance(g_swo_solver_instance_data)
+
+solver_parameter_instance_data_map = %{
+  "tso_iterations" => "20"
+}
+
+Enum.each(solver_parameter_instance_data_map, fn {parameter_name, parameter_value} ->
+  solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
+
+  solver_parameter_instance_data = %{
+    "solver_instance_id" => g_swo_solver_instance.id,
+    "solver_parameter_spec_id" => solver_parameter_spec_id,
+    "value" => parameter_value
+  }
+
+  {:ok, _solver_parameter_instance} =
+    Solvers.create_solver_parameter_instance(solver_parameter_instance_data)
+end)

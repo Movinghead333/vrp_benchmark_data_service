@@ -1,11 +1,14 @@
 defmodule VrpBenchmarkDataService.Solvers.SolverInstance do
+  alias VrpBenchmarkDataService.Solvers.SolverParameterInstance
   use Ecto.Schema
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "solver_instances" do
-    field :solver_id, :binary_id
+    belongs_to(:solver, Solver)
+
+    has_many(:solver_parameter_instances, SolverParameterInstance)
 
     timestamps()
   end

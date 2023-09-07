@@ -293,4 +293,100 @@ defmodule VrpBenchmarkDataService.Solvers do
   def change_solver_instance(%SolverInstance{} = solver_instance, attrs \\ %{}) do
     SolverInstance.changeset(solver_instance, attrs)
   end
+
+  alias VrpBenchmarkDataService.Solvers.SolverParameterInstance
+
+  @doc """
+  Returns the list of solver_parameter_instances.
+
+  ## Examples
+
+      iex> list_solver_parameter_instances()
+      [%SolverParameterInstance{}, ...]
+
+  """
+  def list_solver_parameter_instances do
+    Repo.all(SolverParameterInstance)
+  end
+
+  @doc """
+  Gets a single solver_parameter_instance.
+
+  Raises `Ecto.NoResultsError` if the Solver parameter instance does not exist.
+
+  ## Examples
+
+      iex> get_solver_parameter_instance!(123)
+      %SolverParameterInstance{}
+
+      iex> get_solver_parameter_instance!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_solver_parameter_instance!(id), do: Repo.get!(SolverParameterInstance, id)
+
+  @doc """
+  Creates a solver_parameter_instance.
+
+  ## Examples
+
+      iex> create_solver_parameter_instance(%{field: value})
+      {:ok, %SolverParameterInstance{}}
+
+      iex> create_solver_parameter_instance(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_solver_parameter_instance(attrs \\ %{}) do
+    %SolverParameterInstance{}
+    |> SolverParameterInstance.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a solver_parameter_instance.
+
+  ## Examples
+
+      iex> update_solver_parameter_instance(solver_parameter_instance, %{field: new_value})
+      {:ok, %SolverParameterInstance{}}
+
+      iex> update_solver_parameter_instance(solver_parameter_instance, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_solver_parameter_instance(%SolverParameterInstance{} = solver_parameter_instance, attrs) do
+    solver_parameter_instance
+    |> SolverParameterInstance.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a solver_parameter_instance.
+
+  ## Examples
+
+      iex> delete_solver_parameter_instance(solver_parameter_instance)
+      {:ok, %SolverParameterInstance{}}
+
+      iex> delete_solver_parameter_instance(solver_parameter_instance)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_solver_parameter_instance(%SolverParameterInstance{} = solver_parameter_instance) do
+    Repo.delete(solver_parameter_instance)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking solver_parameter_instance changes.
+
+  ## Examples
+
+      iex> change_solver_parameter_instance(solver_parameter_instance)
+      %Ecto.Changeset{data: %SolverParameterInstance{}}
+
+  """
+  def change_solver_parameter_instance(%SolverParameterInstance{} = solver_parameter_instance, attrs \\ %{}) do
+    SolverParameterInstance.changeset(solver_parameter_instance, attrs)
+  end
 end

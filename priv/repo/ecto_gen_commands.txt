@@ -8,4 +8,4 @@ mix phx.gen.context Problems PrecedenceNodeRelation precedence_node_relation pre
 mix phx.gen.context Solvers Solver solvers name:string version:string
 mix phx.gen.context Solvers SolverParameterSpec solver_parameter_specs solver_id:references:solvers name:string type:string
 mix phx.gen.context Solvers SolverInstance solver_instances solver_id:references:solvers
-mix phx.gen.context Solvers SolverParameterInstance solver_parameter_instances
+mix phx.gen.context Solvers SolverParameterInstance solver_parameter_instances solver_instance_id:references:solver_instances solver_parameter_spec_id:references:solver_parameter_specs value:string

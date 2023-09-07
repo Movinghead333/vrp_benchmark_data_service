@@ -166,4 +166,58 @@ defmodule VrpBenchmarkDataService.SolversTest do
       assert %Ecto.Changeset{} = Solvers.change_solver_instance(solver_instance)
     end
   end
+
+  describe "solver_parameter_instances" do
+    alias VrpBenchmarkDataService.Solvers.SolverParameterInstance
+
+    import VrpBenchmarkDataService.SolversFixtures
+
+    @invalid_attrs %{value: nil}
+
+    test "list_solver_parameter_instances/0 returns all solver_parameter_instances" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      assert Solvers.list_solver_parameter_instances() == [solver_parameter_instance]
+    end
+
+    test "get_solver_parameter_instance!/1 returns the solver_parameter_instance with given id" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      assert Solvers.get_solver_parameter_instance!(solver_parameter_instance.id) == solver_parameter_instance
+    end
+
+    test "create_solver_parameter_instance/1 with valid data creates a solver_parameter_instance" do
+      valid_attrs = %{value: "some value"}
+
+      assert {:ok, %SolverParameterInstance{} = solver_parameter_instance} = Solvers.create_solver_parameter_instance(valid_attrs)
+      assert solver_parameter_instance.value == "some value"
+    end
+
+    test "create_solver_parameter_instance/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Solvers.create_solver_parameter_instance(@invalid_attrs)
+    end
+
+    test "update_solver_parameter_instance/2 with valid data updates the solver_parameter_instance" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      update_attrs = %{value: "some updated value"}
+
+      assert {:ok, %SolverParameterInstance{} = solver_parameter_instance} = Solvers.update_solver_parameter_instance(solver_parameter_instance, update_attrs)
+      assert solver_parameter_instance.value == "some updated value"
+    end
+
+    test "update_solver_parameter_instance/2 with invalid data returns error changeset" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      assert {:error, %Ecto.Changeset{}} = Solvers.update_solver_parameter_instance(solver_parameter_instance, @invalid_attrs)
+      assert solver_parameter_instance == Solvers.get_solver_parameter_instance!(solver_parameter_instance.id)
+    end
+
+    test "delete_solver_parameter_instance/1 deletes the solver_parameter_instance" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      assert {:ok, %SolverParameterInstance{}} = Solvers.delete_solver_parameter_instance(solver_parameter_instance)
+      assert_raise Ecto.NoResultsError, fn -> Solvers.get_solver_parameter_instance!(solver_parameter_instance.id) end
+    end
+
+    test "change_solver_parameter_instance/1 returns a solver_parameter_instance changeset" do
+      solver_parameter_instance = solver_parameter_instance_fixture()
+      assert %Ecto.Changeset{} = Solvers.change_solver_parameter_instance(solver_parameter_instance)
+    end
+  end
 end
