@@ -5,6 +5,8 @@ defmodule VrpBenchmarkDataService.Solutions do
 
   import Ecto.Query, warn: false
   alias VrpBenchmarkDataService.Repo
+  alias VrpBenchmarkDataService.Problems
+  alias VrpBenchmarkDataService.Solvers
 
   alias VrpBenchmarkDataService.Solutions.Solution
 
@@ -293,4 +295,75 @@ defmodule VrpBenchmarkDataService.Solutions do
   def change_route_node_relation(%RouteNodeRelation{} = route_node_relation, attrs \\ %{}) do
     RouteNodeRelation.changeset(route_node_relation, attrs)
   end
+
+  # -------------------- Custom Functions Begin --------------------
+  def create_complete_solution(%{
+        "problem_json" => problem_json,
+        "solver_instance_json" => solver_instance_json,
+        "solution_json" => %{
+          "is_valid" => is_valid,
+          "computation_time" => computation_time,
+          "objective_value" => objective_value,
+          "penalized_objective_value" => penalized_objective_value,
+          "routes" => routes
+        }
+      }) do
+    # TODO: implement
+    problem = Problems.get_problem_for_name(Map.get(problem_json, "name"))
+    problem_id = problem.id
+
+    solver_instance_id =
+      Solvers.get_solver_instance_by_solver_and_parameters(solver_instance_json).id
+
+    solution_data = %{
+      "problem_id" => problem_id,
+      "solver_instance_id" => solver_instance_id,
+      "is_valid" => is_valid,
+      "computation_time" => computation_time,
+      "objective_value" => objective_value,
+      "penalized_objective_value" => penalized_objective_value
+    }
+
+    {:ok, solution} = create_solution(solution_data)
+
+    Enum.each(routes, fn route ->
+      duration = Map.get(route, "duration")
+      node_names_list = Map.get(route, "nodes")
+      number_of_nodes = length(node_names_list)
+      start_node_name = Enum.at(node_names_list, 0)
+      end_node_name = Enum.at(node_names_list, -1)
+
+      vehicle =
+        Problems.get_vehicle_for_problem_start_and_end_nodes(
+          problem.name,
+          start_node_name,
+          end_node_name
+        )
+
+      route_data = %{
+        "solution_id" => solution.id,
+        "vehicle_id" => vehicle.id,
+        "duration" => duration,
+        "number_of_nodes" => number_of_nodes
+      }
+
+      {:ok, route} = create_route(route_data)
+
+      Enum.with_index(node_names_list, fn node_name, index ->
+        node = Problems.get_node_for_problem_and_node_name(problem.name, node_name)
+
+        route_node_relation_data = %{
+          "route_id" => route.id,
+          "node_id" => node.id,
+          "index_in_route" => index
+        }
+
+        {:ok, _route_node_relation} = create_route_node_relation(route_node_relation_data)
+      end)
+    end)
+
+    {:ok, solution}
+  end
+
+  # --------------------- Custom Functions End ---------------------
 end

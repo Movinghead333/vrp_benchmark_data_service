@@ -1,0 +1,24 @@
+{
+    "problem_json": {
+        "name": "Test Problem 1"
+    },
+    "solver_instance_json": {
+        "name": "G_SWO",
+        "version": "1.0.0",
+        "parameter_settings": {
+            "iterations": "20"
+        }
+    },
+    "solution_json": {
+        "is_valid": true,
+        "computation_time": 1.5,
+        "objective_value": 10.0,
+        "penalized_objective_value": 10.0,
+        "routes": [
+            {
+                "duration": 10,
+                "nodes": ["VS1", "D", "N2", "N3", "N1", "VE1"]
+            }
+        ]  
+    }
+}

@@ -355,7 +355,10 @@ defmodule VrpBenchmarkDataService.Solvers do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_solver_parameter_instance(%SolverParameterInstance{} = solver_parameter_instance, attrs) do
+  def update_solver_parameter_instance(
+        %SolverParameterInstance{} = solver_parameter_instance,
+        attrs
+      ) do
     solver_parameter_instance
     |> SolverParameterInstance.changeset(attrs)
     |> Repo.update()
@@ -386,7 +389,68 @@ defmodule VrpBenchmarkDataService.Solvers do
       %Ecto.Changeset{data: %SolverParameterInstance{}}
 
   """
-  def change_solver_parameter_instance(%SolverParameterInstance{} = solver_parameter_instance, attrs \\ %{}) do
+  def change_solver_parameter_instance(
+        %SolverParameterInstance{} = solver_parameter_instance,
+        attrs \\ %{}
+      ) do
     SolverParameterInstance.changeset(solver_parameter_instance, attrs)
   end
+
+  # -------------------- Custom Functions Begin --------------------
+  def get_solver_for_name_and_version(name, version) do
+    query =
+      from(solver in Solver,
+        preload: [:solver_parameter_specs, solver_instances: [:solver_parameter_instances]],
+        where: solver.name == ^name,
+        where: solver.version == ^version
+      )
+
+    Repo.one(query)
+  end
+
+  def get_solver_instance_by_solver_and_parameters(solver_instance_json) do
+    solver_name = Map.get(solver_instance_json, "name")
+    solver_version = Map.get(solver_instance_json, "version")
+    parameter_settings = Map.get(solver_instance_json, "parameter_settings")
+
+    solver = get_solver_for_name_and_version(solver_name, solver_version)
+
+    parameter_name_to_parameter_spec_id =
+      Enum.reduce(solver.solver_parameter_specs, %{}, fn solver_parameter_spec, acc ->
+        Map.put(acc, solver_parameter_spec.name, solver_parameter_spec.id)
+      end)
+
+    parameter_settings =
+      Enum.reduce(parameter_settings, %{}, fn {parameter_name, parameter_value}, acc ->
+        parameter_spec_id = Map.get(parameter_name_to_parameter_spec_id, parameter_name)
+        Map.put(acc, parameter_spec_id, parameter_value)
+      end)
+
+    IO.inspect(parameter_settings)
+
+    Enum.find(solver.solver_instances, nil, fn solver_instance ->
+      IO.inspect(solver_instance)
+
+      mapped_parameter_instances =
+        current_parameter_settings =
+        Enum.reduce(solver_instance.solver_parameter_instances, %{}, fn solver_parameter_instance,
+                                                                        acc ->
+          Map.put(
+            acc,
+            solver_parameter_instance.solver_parameter_spec_id,
+            solver_parameter_instance.value
+          )
+        end)
+
+      Enum.reduce(Map.keys(parameter_settings), true, fn parameter_spec_id, acc ->
+        values_equal =
+          Map.get(current_parameter_settings, parameter_spec_id) ==
+            Map.get(parameter_settings, parameter_spec_id)
+
+        acc and values_equal
+      end)
+    end)
+  end
+
+  # --------------------- Custom Functions End ---------------------
 end

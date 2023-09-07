@@ -689,6 +689,12 @@ defmodule VrpBenchmarkDataService.Problems do
     Repo.one(query)
   end
 
+  def get_problem_for_name(problem_name) do
+    query = from(problem in Problem, where: problem.name == ^problem_name)
+
+    Repo.one(query)
+  end
+
   def convert_complete_problem_to_json(complete_problem) do
     problem_data = %{
       "name" => complete_problem.name
