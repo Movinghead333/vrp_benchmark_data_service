@@ -5,10 +5,10 @@ defmodule VrpBenchmarkDataService.Solutions.Route do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "routes" do
-    field :duration, :integer
-    field :number_of_nodes, :integer
-    field :solution_id, :binary_id
-    field :vehicle_id, :binary_id
+    field(:duration, :integer)
+    field(:number_of_nodes, :integer)
+    field(:solution_id, :binary_id)
+    field(:vehicle_id, :binary_id)
 
     timestamps()
   end
@@ -16,7 +16,7 @@ defmodule VrpBenchmarkDataService.Solutions.Route do
   @doc false
   def changeset(route, attrs) do
     route
-    |> cast(attrs, [:duration, :number_of_nodes])
-    |> validate_required([:duration, :number_of_nodes])
+    |> cast(attrs, [:duration, :number_of_nodes, :solution_id, :vehicle_id])
+    |> validate_required([:duration, :number_of_nodes, :solution_id, :vehicle_id])
   end
 end

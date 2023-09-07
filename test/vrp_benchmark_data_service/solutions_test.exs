@@ -118,4 +118,58 @@ defmodule VrpBenchmarkDataService.SolutionsTest do
       assert %Ecto.Changeset{} = Solutions.change_route(route)
     end
   end
+
+  describe "route_node_relation" do
+    alias VrpBenchmarkDataService.Solutions.RouteNodeRelation
+
+    import VrpBenchmarkDataService.SolutionsFixtures
+
+    @invalid_attrs %{index_in_route: nil}
+
+    test "list_route_node_relation/0 returns all route_node_relation" do
+      route_node_relation = route_node_relation_fixture()
+      assert Solutions.list_route_node_relation() == [route_node_relation]
+    end
+
+    test "get_route_node_relation!/1 returns the route_node_relation with given id" do
+      route_node_relation = route_node_relation_fixture()
+      assert Solutions.get_route_node_relation!(route_node_relation.id) == route_node_relation
+    end
+
+    test "create_route_node_relation/1 with valid data creates a route_node_relation" do
+      valid_attrs = %{index_in_route: 42}
+
+      assert {:ok, %RouteNodeRelation{} = route_node_relation} = Solutions.create_route_node_relation(valid_attrs)
+      assert route_node_relation.index_in_route == 42
+    end
+
+    test "create_route_node_relation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Solutions.create_route_node_relation(@invalid_attrs)
+    end
+
+    test "update_route_node_relation/2 with valid data updates the route_node_relation" do
+      route_node_relation = route_node_relation_fixture()
+      update_attrs = %{index_in_route: 43}
+
+      assert {:ok, %RouteNodeRelation{} = route_node_relation} = Solutions.update_route_node_relation(route_node_relation, update_attrs)
+      assert route_node_relation.index_in_route == 43
+    end
+
+    test "update_route_node_relation/2 with invalid data returns error changeset" do
+      route_node_relation = route_node_relation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Solutions.update_route_node_relation(route_node_relation, @invalid_attrs)
+      assert route_node_relation == Solutions.get_route_node_relation!(route_node_relation.id)
+    end
+
+    test "delete_route_node_relation/1 deletes the route_node_relation" do
+      route_node_relation = route_node_relation_fixture()
+      assert {:ok, %RouteNodeRelation{}} = Solutions.delete_route_node_relation(route_node_relation)
+      assert_raise Ecto.NoResultsError, fn -> Solutions.get_route_node_relation!(route_node_relation.id) end
+    end
+
+    test "change_route_node_relation/1 returns a route_node_relation changeset" do
+      route_node_relation = route_node_relation_fixture()
+      assert %Ecto.Changeset{} = Solutions.change_route_node_relation(route_node_relation)
+    end
+  end
 end

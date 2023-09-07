@@ -35,4 +35,18 @@ defmodule VrpBenchmarkDataService.SolutionsFixtures do
 
     route
   end
+
+  @doc """
+  Generate a route_node_relation.
+  """
+  def route_node_relation_fixture(attrs \\ %{}) do
+    {:ok, route_node_relation} =
+      attrs
+      |> Enum.into(%{
+        index_in_route: 42
+      })
+      |> VrpBenchmarkDataService.Solutions.create_route_node_relation()
+
+    route_node_relation
+  end
 end

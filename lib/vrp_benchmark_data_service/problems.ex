@@ -690,5 +690,17 @@ defmodule VrpBenchmarkDataService.Problems do
     Repo.one(query)
   end
 
+  def get_node_for_problem_and_node_name(problem_name, node_name) do
+    query =
+      from(node in Node,
+        join: problem in Problem,
+        on: node.problem_id == problem.id,
+        where: problem.name == ^problem_name,
+        where: node.name == ^node_name
+      )
+
+    Repo.one(query)
+  end
+
   # --------------------- Custom Functions End ---------------------
 end

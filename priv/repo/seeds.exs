@@ -205,4 +205,16 @@ Enum.each(Map.get(problem_1_solver_1_instance_1_solution_1_data, "routes"), fn n
   }
 
   {:ok, route} = Solutions.create_route(route_data)
+
+  Enum.with_index(node_names_list, fn node_name, index ->
+    node = Problems.get_node_for_problem_and_node_name(problem_1.name, node_name)
+
+    route_node_relation_data = %{
+      "route_id" => route.id,
+      "node_id" => node.id,
+      "index_in_route" => index
+    }
+
+    {:ok, _route_node_relation} = Solutions.create_route_node_relation(route_node_relation_data)
+  end)
 end)
