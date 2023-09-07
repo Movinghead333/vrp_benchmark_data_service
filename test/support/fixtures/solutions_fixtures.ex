@@ -20,4 +20,19 @@ defmodule VrpBenchmarkDataService.SolutionsFixtures do
 
     solution
   end
+
+  @doc """
+  Generate a route.
+  """
+  def route_fixture(attrs \\ %{}) do
+    {:ok, route} =
+      attrs
+      |> Enum.into(%{
+        duration: 42,
+        number_of_nodes: 42
+      })
+      |> VrpBenchmarkDataService.Solutions.create_route()
+
+    route
+  end
 end

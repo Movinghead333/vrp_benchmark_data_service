@@ -203,4 +203,6 @@ Enum.each(Map.get(problem_1_solver_1_instance_1_solution_1_data, "routes"), fn n
     "duration" => 10,
     "number_of_nodes" => number_of_nodes
   }
+
+  {:ok, route} = Solutions.create_route(route_data)
 end)

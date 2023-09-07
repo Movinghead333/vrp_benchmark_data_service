@@ -62,4 +62,60 @@ defmodule VrpBenchmarkDataService.SolutionsTest do
       assert %Ecto.Changeset{} = Solutions.change_solution(solution)
     end
   end
+
+  describe "routes" do
+    alias VrpBenchmarkDataService.Solutions.Route
+
+    import VrpBenchmarkDataService.SolutionsFixtures
+
+    @invalid_attrs %{duration: nil, number_of_nodes: nil}
+
+    test "list_routes/0 returns all routes" do
+      route = route_fixture()
+      assert Solutions.list_routes() == [route]
+    end
+
+    test "get_route!/1 returns the route with given id" do
+      route = route_fixture()
+      assert Solutions.get_route!(route.id) == route
+    end
+
+    test "create_route/1 with valid data creates a route" do
+      valid_attrs = %{duration: 42, number_of_nodes: 42}
+
+      assert {:ok, %Route{} = route} = Solutions.create_route(valid_attrs)
+      assert route.duration == 42
+      assert route.number_of_nodes == 42
+    end
+
+    test "create_route/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Solutions.create_route(@invalid_attrs)
+    end
+
+    test "update_route/2 with valid data updates the route" do
+      route = route_fixture()
+      update_attrs = %{duration: 43, number_of_nodes: 43}
+
+      assert {:ok, %Route{} = route} = Solutions.update_route(route, update_attrs)
+      assert route.duration == 43
+      assert route.number_of_nodes == 43
+    end
+
+    test "update_route/2 with invalid data returns error changeset" do
+      route = route_fixture()
+      assert {:error, %Ecto.Changeset{}} = Solutions.update_route(route, @invalid_attrs)
+      assert route == Solutions.get_route!(route.id)
+    end
+
+    test "delete_route/1 deletes the route" do
+      route = route_fixture()
+      assert {:ok, %Route{}} = Solutions.delete_route(route)
+      assert_raise Ecto.NoResultsError, fn -> Solutions.get_route!(route.id) end
+    end
+
+    test "change_route/1 returns a route changeset" do
+      route = route_fixture()
+      assert %Ecto.Changeset{} = Solutions.change_route(route)
+    end
+  end
 end
