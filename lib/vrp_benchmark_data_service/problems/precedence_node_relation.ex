@@ -1,4 +1,5 @@
 defmodule VrpBenchmarkDataService.Problems.PrecedenceNodeRelation do
+  alias VrpBenchmarkDataService.Problems.Precedence
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -6,8 +7,8 @@ defmodule VrpBenchmarkDataService.Problems.PrecedenceNodeRelation do
   @foreign_key_type :binary_id
   schema "precedence_node_relation" do
     field(:is_preceeding, :boolean, default: false)
-    field(:precedence_id, :binary_id)
-    field(:node_id, :binary_id)
+    belongs_to(:precedence, Precedence)
+    belongs_to(:node, Node)
 
     timestamps()
   end

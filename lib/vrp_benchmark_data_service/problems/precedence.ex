@@ -3,6 +3,7 @@ defmodule VrpBenchmarkDataService.Problems.Precedence do
   import Ecto.Changeset
 
   alias VrpBenchmarkDataService.Problems.PrecedenceNodeRelation
+  alias VrpBenchmarkDataService.Problems.Node
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,7 +11,13 @@ defmodule VrpBenchmarkDataService.Problems.Precedence do
     field(:type, :string)
     field(:problem_id, :binary_id)
 
-    has_many(:precedence_node_relation, PrecedenceNodeRelation)
+    has_many(:precedence_node_relation_entries, PrecedenceNodeRelation)
+
+    many_to_many(:nodes, Node,
+      join_through: PrecedenceNodeRelation,
+      join_keys: [precedence_id: :id, node_id: :id],
+      on_replace: :delete
+    )
 
     timestamps()
   end

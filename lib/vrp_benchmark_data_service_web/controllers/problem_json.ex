@@ -1,24 +1,18 @@
 defmodule VrpBenchmarkDataServiceWeb.ProblemJSON do
   alias VrpBenchmarkDataService.Problems.Problem
+  alias VrpBenchmarkDataService.Problems
 
   @doc """
   Renders a list of problems.
   """
   def index(%{problems: problems}) do
-    %{data: for(problem <- problems, do: data(problem))}
+    %{data: for(problem <- problems, do: Problems.convert_complete_problem_to_json(problem))}
   end
 
   @doc """
   Renders a single problem.
   """
   def show(%{problem: problem}) do
-    %{data: data(problem)}
-  end
-
-  defp data(%Problem{} = problem) do
-    %{
-      id: problem.id,
-      name: problem.name
-    }
+    Problems.convert_complete_problem_to_json(problem)
   end
 end

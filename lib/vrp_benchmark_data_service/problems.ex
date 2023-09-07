@@ -673,6 +673,120 @@ defmodule VrpBenchmarkDataService.Problems do
     {:ok, problem}
   end
 
+  # Test with: VrpBenchmarkDataService.Problems.get_complete_problem("Test Problem 1")
+  def get_complete_problem(problem_name) do
+    query =
+      from(problem in Problem,
+        where: problem.name == ^problem_name,
+        preload: [
+          :nodes,
+          :metric_entries,
+          vehicles: [:start_node, :end_node],
+          precedences: :precedence_node_relation_entries
+        ]
+      )
+
+    Repo.one(query)
+  end
+
+  def convert_complete_problem_to_json(complete_problem) do
+    problem_data = %{
+      "name" => complete_problem.name
+    }
+
+    node_data_list =
+      for node <- complete_problem.nodes do
+        %{
+          "name" => node.name,
+          "x_pos" => node.x_pos,
+          "y_pos" => node.y_pos,
+          "volume_change" => node.volume_change,
+          "service_time" => node.service_time,
+          "earliest_arrival_time" => node.earliest_arrival_time,
+          "latest_departure_time" => node.latest_departure_time
+        }
+      end
+
+    vehicles_data_list =
+      for vehicle <- complete_problem.vehicles do
+        %{
+          "name" => vehicle.name,
+          "capacity" => vehicle.capacity,
+          "start_node_name" => vehicle.start_node.name,
+          "end_node_name" => vehicle.end_node.name
+        }
+      end
+
+    acc = Enum.reduce(complete_problem.nodes, %{}, fn node, acc -> Map.put(acc, node.id, %{}) end)
+
+    matrix_entry_lookup_table =
+      Enum.reduce(complete_problem.metric_entries, acc, fn metric_entry, acc ->
+        row_map =
+          Map.get(acc, metric_entry.from_node_id)
+          |> Map.put(metric_entry.to_node_id, metric_entry.travel_time)
+
+        Map.put(acc, metric_entry.from_node_id, row_map)
+      end)
+
+    node_ids = Enum.map(complete_problem.nodes, fn node -> node.id end)
+
+    travel_time_matrix =
+      Enum.reduce(node_ids, [], fn from_node_id, acc ->
+        matrix_row =
+          for to_node_id <- node_ids do
+            lookup_row = Map.get(matrix_entry_lookup_table, from_node_id)
+            Map.get(lookup_row, to_node_id)
+          end
+
+        List.insert_at(acc, -1, matrix_row)
+      end)
+
+    node_id_node_name_map =
+      Enum.reduce(complete_problem.nodes, %{}, fn node, acc ->
+        Map.put(acc, node.id, node.name)
+      end)
+
+    precedence_data_list =
+      for precedence <- complete_problem.precedences do
+        precedence_node_relation_data_list =
+          for precedence_node_relation <- precedence.precedence_node_relation_entries do
+            %{
+              "node_name" => Map.get(node_id_node_name_map, precedence_node_relation.node_id),
+              "is_preceeding" => precedence_node_relation.is_preceeding
+            }
+          end
+
+        %{
+          "type" => precedence.type,
+          "precedence_node_relation_data_list" => precedence_node_relation_data_list
+        }
+      end
+
+    problem_json = %{
+      "problem_data" => problem_data,
+      "node_data_list" => node_data_list,
+      "vehicles_data_list" => vehicles_data_list,
+      "travel_time_matrix" => travel_time_matrix,
+      "precedence_data_list" => precedence_data_list
+    }
+  end
+
+  # Test with: VrpBenchmarkDataService.Problems.list_preferences_for_problem("Test Problem 1")
+  # def list_preferences_for_problem(problem_name) do
+  #   query =
+  #     from(precedence in Precedence,
+  #       join: problem in Problem,
+  #       on: precedence.problem_id == problem.id,
+  #       join: precedence_node_relation in PrecedenceNodeRelation,
+  #       on: precedence.id == precedence_node_relation.precedence_id,
+  #       join: nodes in assoc(precedence, :nodes),
+  #       preload: [nodes: nodes],
+  #       where: problem.name == ^problem_name
+  #     )
+
+  #   Repo.all(query)
+  # end
+
   def get_vehicle_for_problem_start_and_end_nodes(problem_name, start_node_name, end_node_name) do
     query =
       from(vehicle in Vehicle,

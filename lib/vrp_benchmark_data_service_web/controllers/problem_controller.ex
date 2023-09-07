@@ -20,8 +20,10 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    problem = Problems.get_problem!(id)
+  def show(conn, %{"id" => name}) do
+    problem = Problems.get_complete_problem(name)
+
+    IO.inspect(problem)
     render(conn, :show, problem: problem)
   end
 

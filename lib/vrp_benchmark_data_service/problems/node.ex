@@ -2,6 +2,7 @@ defmodule VrpBenchmarkDataService.Problems.Node do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias VrpBenchmarkDataService.Problems.Precedence
   alias VrpBenchmarkDataService.Problems.Problem
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -15,6 +16,8 @@ defmodule VrpBenchmarkDataService.Problems.Node do
     field(:service_time, :integer)
     field(:volume_change, :integer)
     belongs_to(:problem, Problem)
+
+    many_to_many(:precedences, Precedence, join_through: PrecedenceNodeRelation)
 
     timestamps()
   end

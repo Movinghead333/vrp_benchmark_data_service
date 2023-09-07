@@ -1,4 +1,5 @@
 defmodule VrpBenchmarkDataServiceWeb.Router do
+  alias VrpBenchmarkDataService.Problems.Problem
   alias VrpBenchmarkDataServiceWeb.ProblemController
   use VrpBenchmarkDataServiceWeb, :router
 
@@ -24,7 +25,11 @@ defmodule VrpBenchmarkDataServiceWeb.Router do
   scope "/api" do
     pipe_through(:api)
 
-    resources("/problems", ProblemController, except: [:new, :edit])
+    get("/problems", ProblemController, :index)
+    get("/problems/:id", ProblemController, :show)
+    put("/problems/:id", ProblemController, :edit)
+    post("/problems", ProblemController, :create)
+    delete("/problems/:id", ProblemController, :delete)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
