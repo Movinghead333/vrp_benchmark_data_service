@@ -125,7 +125,7 @@ Problems.create_complete_problem(test_problem_1_complete_problem_data)
 solver_data = %{
   "name" => "G_SWO",
   "version" => "1.0.0",
-  "parameters" => [
+  "parameter_specs" => [
     %{
       "name" => "tso_iterations",
       "type" => "integer"
@@ -134,3 +134,14 @@ solver_data = %{
 }
 
 {:ok, g_swo_solver} = Solvers.create_solver(solver_data)
+
+solver_parameter_specs_map =
+  Enum.reduce(Map.get(solver_data, "parameter_specs"), %{}, fn solver_parameter_spec_data, acc ->
+    solver_parameter_spec_data =
+      Map.put_new(solver_parameter_spec_data, "solver_id", g_swo_solver.id)
+
+    {:ok, solver_parameter_spec} =
+      Solvers.create_solver_parameter_spec(solver_parameter_spec_data)
+
+    Map.put(acc, Map.get(solver_parameter_spec_data, "name"), solver_parameter_spec)
+  end)

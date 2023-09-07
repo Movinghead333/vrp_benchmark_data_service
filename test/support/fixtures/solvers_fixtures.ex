@@ -18,4 +18,19 @@ defmodule VrpBenchmarkDataService.SolversFixtures do
 
     solver
   end
+
+  @doc """
+  Generate a solver_parameter_spec.
+  """
+  def solver_parameter_spec_fixture(attrs \\ %{}) do
+    {:ok, solver_parameter_spec} =
+      attrs
+      |> Enum.into(%{
+        name: "some name",
+        type: "some type"
+      })
+      |> VrpBenchmarkDataService.Solvers.create_solver_parameter_spec()
+
+    solver_parameter_spec
+  end
 end
