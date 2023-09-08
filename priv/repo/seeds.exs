@@ -154,7 +154,7 @@ solver_1_instance_1_data = %{
 {:ok, solver_1_instance_1} = Solvers.create_solver_instance(solver_1_instance_1_data)
 
 solver_parameter_instance_data_map = %{
-  "iterations" => "100"
+  "iterations" => "20"
 }
 
 Enum.each(solver_parameter_instance_data_map, fn {parameter_name, parameter_value} ->

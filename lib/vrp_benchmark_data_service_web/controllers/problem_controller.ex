@@ -24,7 +24,7 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
     problem = Problems.get_complete_problem(name)
 
     IO.inspect(problem)
-    render(conn, :show, %{"asdfasdf" => "asdfasdf"})
+    render(conn, :show, problem: problem)
   end
 
   def update(conn, %{"id" => id, "problem" => problem_params}) do
