@@ -23,7 +23,6 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
   def show(conn, %{"id" => name}) do
     problem = Problems.get_complete_problem(name)
 
-    IO.inspect(problem)
     render(conn, :show, problem: problem)
   end
 
@@ -39,7 +38,6 @@ defmodule VrpBenchmarkDataServiceWeb.ProblemController do
     problem = Problems.get_problem!(id)
 
     result = Problems.delete_problem(problem)
-    IO.inspect(result)
 
     with {:ok, %Problem{}} <- result do
       send_resp(conn, :no_content, "")

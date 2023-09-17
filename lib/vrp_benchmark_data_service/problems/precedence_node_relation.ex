@@ -1,5 +1,6 @@
 defmodule VrpBenchmarkDataService.Problems.PrecedenceNodeRelation do
   alias VrpBenchmarkDataService.Problems.Precedence
+  alias VrpBenchmarkDataService.Problems.Node
   use Ecto.Schema
   import Ecto.Changeset
 

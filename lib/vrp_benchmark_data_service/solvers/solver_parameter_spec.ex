@@ -1,5 +1,6 @@
 defmodule VrpBenchmarkDataService.Solvers.SolverParameterSpec do
   alias VrpBenchmarkDataService.Solvers.SolverParameterInstance
+  alias VrpBenchmarkDataService.Solvers.Solver
   use Ecto.Schema
   import Ecto.Changeset
 

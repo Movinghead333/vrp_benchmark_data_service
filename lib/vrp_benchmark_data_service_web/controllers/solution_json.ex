@@ -1,6 +1,5 @@
 defmodule VrpBenchmarkDataServiceWeb.SolutionJSON do
-  alias VrpBenchmarkDataService.Solutions.Solution
-  alias VrpBenchmarkDataService.Solutions
+  # alias VrpBenchmarkDataService.Solutions
 
   @doc """
   Renders a list of solutions.
@@ -9,10 +8,10 @@ defmodule VrpBenchmarkDataServiceWeb.SolutionJSON do
     %{data: for(solution <- solutions, do: solution)}
   end
 
-  @doc """
-  Renders a single solution.
-  """
-  def show(%{solution: solution}) do
-    %{"computation_time" => solution.computation_time}
-  end
+  # @doc """
+  # Renders a single solution.
+  # """
+  # def show(%{solution: solution}) do
+  #   %{"computation_time" => solution.computation_time}
+  # end
 end

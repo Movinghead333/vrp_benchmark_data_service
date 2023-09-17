@@ -4,6 +4,7 @@ defmodule VrpBenchmarkDataService.Problems.Node do
 
   alias VrpBenchmarkDataService.Problems.Precedence
   alias VrpBenchmarkDataService.Problems.Problem
+  alias VrpBenchmarkDataService.Problems.PrecedenceNodeRelation
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

@@ -1,5 +1,4 @@
 defmodule VrpBenchmarkDataServiceWeb.Router do
-  alias VrpBenchmarkDataService.Problems.Problem
   alias VrpBenchmarkDataServiceWeb.ProblemController
   alias VrpBenchmarkDataServiceWeb.SolutionController
   use VrpBenchmarkDataServiceWeb, :router

@@ -409,30 +409,33 @@ defmodule VrpBenchmarkDataService.Solvers do
   end
 
   def get_solver_instance_by_solver_and_parameters(solver_instance_json) do
+    # Get solver config from input json
     solver_name = Map.get(solver_instance_json, "name")
     solver_version = Map.get(solver_instance_json, "version")
     parameter_settings = Map.get(solver_instance_json, "parameter_settings")
 
+    # Get matching solver from db
     solver = get_solver_for_name_and_version(solver_name, solver_version)
 
+    # Build mapping from parameter names to parameter specs so we can later map
+    # names to ids when comparing solver instances.
     parameter_name_to_parameter_spec_id =
       Enum.reduce(solver.solver_parameter_specs, %{}, fn solver_parameter_spec, acc ->
         Map.put(acc, solver_parameter_spec.name, solver_parameter_spec.id)
       end)
 
+    # Using the mapping we just created we can convert the parameters of the input solver instance into mapping from
+    # parameter spec ids to the actual values.
     parameter_settings =
       Enum.reduce(parameter_settings, %{}, fn {parameter_name, parameter_value}, acc ->
         parameter_spec_id = Map.get(parameter_name_to_parameter_spec_id, parameter_name)
         Map.put(acc, parameter_spec_id, parameter_value)
       end)
 
-    IO.inspect(parameter_settings)
-
+    # With the mapping we just created, we can search through all instances of the given solver and try to find a
+    # matching one.
     Enum.find(solver.solver_instances, nil, fn solver_instance ->
-      IO.inspect(solver_instance)
-
-      mapped_parameter_instances =
-        current_parameter_settings =
+      current_parameter_settings =
         Enum.reduce(solver_instance.solver_parameter_instances, %{}, fn solver_parameter_instance,
                                                                         acc ->
           Map.put(
@@ -442,7 +445,7 @@ defmodule VrpBenchmarkDataService.Solvers do
           )
         end)
 
-      Enum.reduce(Map.keys(parameter_settings), true, fn parameter_spec_id, acc ->
+      Enum.reduce(Map.keys(current_parameter_settings), true, fn parameter_spec_id, acc ->
         values_equal =
           Map.get(current_parameter_settings, parameter_spec_id) ==
             Map.get(parameter_settings, parameter_spec_id)

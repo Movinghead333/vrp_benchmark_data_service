@@ -1,5 +1,4 @@
 defmodule VrpBenchmarkDataServiceWeb.ProblemJSON do
-  alias VrpBenchmarkDataService.Problems.Problem
   alias VrpBenchmarkDataService.Problems
 
   @doc """

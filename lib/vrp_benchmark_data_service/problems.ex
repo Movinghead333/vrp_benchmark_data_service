@@ -593,8 +593,6 @@ defmodule VrpBenchmarkDataService.Problems do
         "travel_time_matrix" => travel_time_matrix,
         "precedence_data_list" => precedence_data_list
       }) do
-    IO.inspect(problem_data)
-
     {:ok, problem} = create_problem(problem_data)
 
     # Create nodes
@@ -768,7 +766,7 @@ defmodule VrpBenchmarkDataService.Problems do
         }
       end
 
-    problem_json = %{
+    %{
       "problem_data" => problem_data,
       "node_data_list" => node_data_list,
       "vehicles_data_list" => vehicles_data_list,
