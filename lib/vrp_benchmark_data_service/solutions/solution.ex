@@ -1,4 +1,5 @@
 defmodule VrpBenchmarkDataService.Solutions.Solution do
+  alias VrpBenchmarkDataService.BenchmarkSuites.BenchmarkSuite
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -11,6 +12,7 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
     field(:penalized_objective_value, :float)
     field(:problem_id, :binary_id)
     field(:solver_instance_id, :binary_id)
+    belongs_to(:benchmark_suite, BenchmarkSuite, type: :binary_id)
 
     timestamps()
   end
@@ -24,7 +26,8 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
       :objective_value,
       :penalized_objective_value,
       :problem_id,
-      :solver_instance_id
+      :solver_instance_id,
+      :benchmark_suite_id
     ])
     |> validate_required([
       :is_valid,
@@ -32,7 +35,8 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
       :objective_value,
       :penalized_objective_value,
       :problem_id,
-      :solver_instance_id
+      :solver_instance_id,
+      :benchmark_suite_id
     ])
   end
 end

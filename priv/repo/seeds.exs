@@ -1,7 +1,7 @@
 alias VrpBenchmarkDataService.Problems
-alias VrpBenchmarkDataService.Enums.PrecedenceType
 alias VrpBenchmarkDataService.Solutions
 alias VrpBenchmarkDataService.Solvers
+alias VrpBenchmarkDataService.BenchmarkSuites
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
@@ -72,8 +72,29 @@ Enum.each(solver_parameter_instance_data_map, fn {parameter_name, parameter_valu
     Solvers.create_solver_parameter_instance(solver_parameter_instance_data)
 end)
 
+# Create benchmark suite
+benchmark_suite_data = %{
+  "name" => "Sample benchmark suite",
+  "runs_per_problem" => 1
+}
+
+{:ok, benchmark_suite} = BenchmarkSuites.create_benchmark_suite(benchmark_suite_data)
+
+problems_in_benchmark_suite_data_list = [
+  %{
+    "benchmark_suite_id" => benchmark_suite.id,
+    "problem_id" => problem_1.id
+  }
+]
+
+Enum.each(problems_in_benchmark_suite_data_list, fn problems_in_benchmark_suite_data ->
+  {:ok, _problems_in_benchmark_suite_relation} =
+    BenchmarkSuites.create_problems_in_benchmark_suites_relation(problems_in_benchmark_suite_data)
+end)
+
 # Create solution
 problem_1_solver_1_instance_1_solution_1_data = %{
+  "benchmark_suite_id" => benchmark_suite.id,
   "problem_id" => problem_1.id,
   "solver_instance_id" => solver_1_instance_1.id,
   "is_valid" => true,

@@ -13,3 +13,6 @@ mix phx.gen.context Solvers SolverParameterInstance solver_parameter_instances s
 mix phx.gen.context Solutions Solution solutions problem_id:references:problems solver_instance_id:references:solver_instances is_valid:boolean computation_time:float objective_value:float penalized_objective_value:float
 mix phx.gen.context Solutions Route routes solution_id:references:solutions vehicle_id:references:vehicles duration:integer number_of_nodes:integer
 mix phx.gen.context Solutions RouteNodeRelation route_node_relation route_id:references:routes node_id:references:nodes index_in_route:integer
+
+mix phx.gen.context BenchmarkSuites BenchmarkSuite benchmark_suites name:string runs_per_problem:integer
+mix phx.gen.context BenchmarkSuites ProblemsInBenchmarkSuitesRelation problems_in_benchmark_suites_relation benchmark_suite_id:references:benchmark_suites problem_id:references:problems
