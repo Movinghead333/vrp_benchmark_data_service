@@ -4,6 +4,7 @@ defmodule VrpBenchmarkDataService.Solutions do
   """
 
   import Ecto.Query, warn: false
+  alias VrpBenchmarkDataService.BenchmarkSuites
   alias VrpBenchmarkDataService.Repo
   alias VrpBenchmarkDataService.Problems
   alias VrpBenchmarkDataService.Solvers
@@ -298,6 +299,7 @@ defmodule VrpBenchmarkDataService.Solutions do
 
   # -------------------- Custom Functions Begin --------------------
   def create_complete_solution(%{
+        "benchmark_suite_name" => benchmark_suite_name,
         "problem_json" => problem_json,
         "solver_instance_json" => solver_instance_json,
         "solution_json" => %{
@@ -308,16 +310,18 @@ defmodule VrpBenchmarkDataService.Solutions do
           "routes" => routes
         }
       }) do
-    # TODO: implement
+    benchmark_suite = BenchmarkSuites.get_benchmark_suite_for_name(benchmark_suite_name)
+
     problem = Problems.get_problem_for_name(Map.get(problem_json, "name"))
     problem_id = problem.id
 
-    solver_instance_id =
-      Solvers.get_solver_instance_by_solver_and_parameters(solver_instance_json).id
+    {:ok, solver_instance} =
+      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_json)
 
     solution_data = %{
+      "benchmark_suite_id" => benchmark_suite.id,
       "problem_id" => problem_id,
-      "solver_instance_id" => solver_instance_id,
+      "solver_instance_id" => solver_instance.id,
       "is_valid" => is_valid,
       "computation_time" => computation_time,
       "objective_value" => objective_value,

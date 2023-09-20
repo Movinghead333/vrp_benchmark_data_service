@@ -408,12 +408,11 @@ defmodule VrpBenchmarkDataService.Solvers do
     Repo.one(query)
   end
 
-  def get_solver_instance_by_solver_and_parameters(solver_instance_json) do
-    # Get solver config from input json
-    solver_name = Map.get(solver_instance_json, "name")
-    solver_version = Map.get(solver_instance_json, "version")
-    parameter_settings = Map.get(solver_instance_json, "parameter_settings")
-
+  def get_solver_instance_for_solver_and_parameters(%{
+        "name" => solver_name,
+        "version" => solver_version,
+        "parameter_settings" => parameter_settings
+      }) do
     # Get matching solver from db
     solver = get_solver_for_name_and_version(solver_name, solver_version)
 
@@ -434,25 +433,35 @@ defmodule VrpBenchmarkDataService.Solvers do
 
     # With the mapping we just created, we can search through all instances of the given solver and try to find a
     # matching one.
-    Enum.find(solver.solver_instances, nil, fn solver_instance ->
-      current_parameter_settings =
-        Enum.reduce(solver_instance.solver_parameter_instances, %{}, fn solver_parameter_instance,
-                                                                        acc ->
-          Map.put(
-            acc,
-            solver_parameter_instance.solver_parameter_spec_id,
-            solver_parameter_instance.value
+    solver_instance =
+      Enum.find(solver.solver_instances, nil, fn solver_instance ->
+        current_parameter_settings =
+          Enum.reduce(
+            solver_instance.solver_parameter_instances,
+            %{},
+            fn solver_parameter_instance, acc ->
+              Map.put(
+                acc,
+                solver_parameter_instance.solver_parameter_spec_id,
+                solver_parameter_instance.value
+              )
+            end
           )
+
+        Enum.reduce(Map.keys(current_parameter_settings), true, fn parameter_spec_id, acc ->
+          values_equal =
+            Map.get(current_parameter_settings, parameter_spec_id) ==
+              Map.get(parameter_settings, parameter_spec_id)
+
+          acc and values_equal
         end)
-
-      Enum.reduce(Map.keys(current_parameter_settings), true, fn parameter_spec_id, acc ->
-        values_equal =
-          Map.get(current_parameter_settings, parameter_spec_id) ==
-            Map.get(parameter_settings, parameter_spec_id)
-
-        acc and values_equal
       end)
-    end)
+
+    if is_nil(solver_instance) do
+      {:error, "Solver instance could not be found."}
+    else
+      {:ok, solver_instance}
+    end
   end
 
   # --------------------- Custom Functions End ---------------------

@@ -8,6 +8,9 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
 
   alias VrpBenchmarkDataService.BenchmarkSuites.BenchmarkSuite
   alias VrpBenchmarkDataService.Problems
+  alias VrpBenchmarkDataService.Problems.Problem
+  alias VrpBenchmarkDataService.Solvers
+  alias VrpBenchmarkDataService.Solutions.Solution
 
   @doc """
   Returns the list of benchmark_suites.
@@ -234,6 +237,60 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
     end)
 
     {:ok, benchmark_suite}
+  end
+
+  def get_benchmark_suite_for_name(benchmark_suite_name) do
+    query =
+      from(benchmark_suite in BenchmarkSuite,
+        where: benchmark_suite.name == ^benchmark_suite_name,
+        preload: :problems
+      )
+
+    Repo.one(query)
+  end
+
+  def get_open_runs_per_problem_for_benchmark_suite_and_solver_instance(%{
+        "benchmark_suite_name" => benchmark_suite_name,
+        "solver_instance_config" => solver_instance_config
+      }) do
+    benchmark_suite = get_benchmark_suite_for_name(benchmark_suite_name)
+
+    {:ok, solver_instance} =
+      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_config)
+
+    existing_solutions_query =
+      from(solution in Solution,
+        join: problem in Problem,
+        on: solution.problem_id == problem.id,
+        where: solution.benchmark_suite_id == ^benchmark_suite.id,
+        where: solution.solver_instance_id == ^solver_instance.id,
+        group_by: problem.name,
+        select: %{
+          problem_name: problem.name,
+          solution_count: count(solution.id)
+        }
+      )
+
+    existing_solutions = Repo.all(existing_solutions_query)
+
+    remaining_runs_per_problem_map =
+      Enum.reduce(benchmark_suite.problems, %{}, fn problem, acc ->
+        Map.put_new(acc, problem.name, benchmark_suite.runs_per_problem)
+      end)
+
+    remaining_runs_per_problem_map =
+      Enum.reduce(existing_solutions, remaining_runs_per_problem_map, fn existing_solutions_entry,
+                                                                         acc ->
+        existing_solutions_count = max(existing_solutions_entry.solution_count, 0)
+
+        Map.put(
+          acc,
+          existing_solutions_entry.problem_name,
+          benchmark_suite.runs_per_problem - existing_solutions_count
+        )
+      end)
+
+    remaining_runs_per_problem_map
   end
 
   # --------------------- Custom Functions End ---------------------

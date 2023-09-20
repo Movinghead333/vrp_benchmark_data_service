@@ -2,6 +2,7 @@ defmodule VrpBenchmarkDataServiceWeb.Router do
   alias VrpBenchmarkDataServiceWeb.BenchmarkSuiteController
   alias VrpBenchmarkDataServiceWeb.ProblemController
   alias VrpBenchmarkDataServiceWeb.SolutionController
+  alias VrpBenchmarkDataServiceWeb.RemainingRunsController
   use VrpBenchmarkDataServiceWeb, :router
 
   pipeline :browser do
@@ -35,6 +36,8 @@ defmodule VrpBenchmarkDataServiceWeb.Router do
     post("/solutions", SolutionController, :create)
 
     post("/benchmark_suites", BenchmarkSuiteController, :create)
+
+    post("/benchmark_suites/remainings_runs", RemainingRunsController, :create)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

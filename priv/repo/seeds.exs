@@ -75,7 +75,7 @@ end)
 # Create benchmark suite
 benchmark_suite_data = %{
   "name" => "Sample benchmark suite",
-  "runs_per_problem" => 1
+  "runs_per_problem" => 2
 }
 
 {:ok, benchmark_suite} = BenchmarkSuites.create_benchmark_suite(benchmark_suite_data)
