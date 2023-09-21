@@ -26,7 +26,7 @@ IO.inspect(problem_1_complete_problem_data)
 {:ok, problem_1} = Problems.create_complete_problem(problem_1_complete_problem_data)
 
 # Create solver
-solver_data = %{
+solver_specification = %{
   "name" => "G_SWO",
   "version" => "1.0.0",
   "parameter_specs" => [
@@ -37,40 +37,17 @@ solver_data = %{
   ]
 }
 
-{:ok, solver_1} = Solvers.create_solver(solver_data)
+{:ok, solver_1} = Solvers.create_complete_solver(solver_specification)
 
-solver_parameter_specs_map =
-  Enum.reduce(Map.get(solver_data, "parameter_specs"), %{}, fn solver_parameter_spec_data, acc ->
-    solver_parameter_spec_data = Map.put_new(solver_parameter_spec_data, "solver_id", solver_1.id)
-
-    {:ok, solver_parameter_spec} =
-      Solvers.create_solver_parameter_spec(solver_parameter_spec_data)
-
-    Map.put(acc, Map.get(solver_parameter_spec_data, "name"), solver_parameter_spec)
-  end)
-
-solver_1_instance_1_data = %{
-  "solver_id" => solver_1.id
-}
-
-{:ok, solver_1_instance_1} = Solvers.create_solver_instance(solver_1_instance_1_data)
-
-solver_parameter_instance_data_map = %{
-  "iterations" => "20"
-}
-
-Enum.each(solver_parameter_instance_data_map, fn {parameter_name, parameter_value} ->
-  solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
-
-  solver_parameter_instance_data = %{
-    "solver_instance_id" => solver_1_instance_1.id,
-    "solver_parameter_spec_id" => solver_parameter_spec_id,
-    "value" => parameter_value
+solver_instance_specifcation = %{
+  "name" => "G_SWO",
+  "version" => "1.0.0",
+  "parameter_settings" => %{
+    "iterations" => "20"
   }
+}
 
-  {:ok, _solver_parameter_instance} =
-    Solvers.create_solver_parameter_instance(solver_parameter_instance_data)
-end)
+{:ok, solver_1_instance_1} = Solvers.create_complete_solver_instance(solver_instance_specifcation)
 
 # Create benchmark suite
 benchmark_suite_data = %{

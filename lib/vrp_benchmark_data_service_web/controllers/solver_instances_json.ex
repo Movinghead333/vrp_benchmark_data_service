@@ -1,0 +1,2 @@
+defmodule VrpBenchmarkDataServiceWeb.SolverInstancesJson do
+end

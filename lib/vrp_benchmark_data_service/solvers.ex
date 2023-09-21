@@ -409,8 +409,8 @@ defmodule VrpBenchmarkDataService.Solvers do
   end
 
   def get_solver_instance_for_solver_and_parameters(%{
-        "name" => solver_name,
-        "version" => solver_version,
+        "solver_name" => solver_name,
+        "solver_version" => solver_version,
         "parameter_settings" => parameter_settings
       }) do
     # Get matching solver from db
@@ -462,6 +462,64 @@ defmodule VrpBenchmarkDataService.Solvers do
     else
       {:ok, solver_instance}
     end
+  end
+
+  def create_complete_solver(
+        %{
+          "name" => name,
+          "version" => version,
+          "parameter_specs" => parameter_specs
+        } = solver_specification
+      ) do
+    {:ok, solver} = create_solver(solver_specification)
+
+    solver_parameter_specs_map =
+      Enum.reduce(parameter_specs, %{}, fn solver_parameter_spec_data, acc ->
+        solver_parameter_spec_data =
+          Map.put_new(solver_parameter_spec_data, "solver_id", solver.id)
+
+        {:ok, solver_parameter_spec} = create_solver_parameter_spec(solver_parameter_spec_data)
+      end)
+
+    {:ok, solver}
+  end
+
+  @doc """
+  Create a new instance for a given solver with a map of parameter settings
+  """
+  def create_complete_solver_instance(
+        %{
+          "name" => name,
+          "version" => version,
+          "parameter_settings" => parameter_settings
+        } = solver_instance_specification
+      ) do
+    solver = get_solver_for_name_and_version(name, version)
+
+    {:ok, solver_instance} = create_solver_instance(%{"solver_id" => solver.id})
+
+    solver_parameter_specs_map =
+      Enum.reduce(solver.solver_parameter_specs, %{}, fn solver_parameter_spec, acc ->
+        Map.put(acc, solver_parameter_spec.name, solver_parameter_spec)
+      end)
+
+    IO.inspect(solver_parameter_specs_map)
+    IO.inspect(parameter_settings)
+
+    Enum.each(parameter_settings, fn {parameter_name, parameter_value} ->
+      solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
+
+      solver_parameter_instance_data = %{
+        "solver_instance_id" => solver_instance.id,
+        "solver_parameter_spec_id" => solver_parameter_spec_id,
+        "value" => parameter_value
+      }
+
+      {:ok, _solver_parameter_instance} =
+        create_solver_parameter_instance(solver_parameter_instance_data)
+    end)
+
+    {:ok, solver_instance}
   end
 
   # --------------------- Custom Functions End ---------------------
