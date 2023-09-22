@@ -301,9 +301,10 @@ defmodule VrpBenchmarkDataService.Solutions do
   def create_complete_solution(%{
         "benchmark_suite_name" => benchmark_suite_name,
         "problem_json" => problem_json,
-        "solver_instance_json" => solver_instance_json,
+        "solver_instance_spec" => solver_instance_spec,
         "solution_json" => %{
           "is_valid" => is_valid,
+          "seed" => seed,
           "computation_time" => computation_time,
           "objective_value" => objective_value,
           "penalized_objective_value" => penalized_objective_value,
@@ -316,13 +317,14 @@ defmodule VrpBenchmarkDataService.Solutions do
     problem_id = problem.id
 
     {:ok, solver_instance} =
-      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_json)
+      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_spec)
 
     solution_data = %{
       "benchmark_suite_id" => benchmark_suite.id,
       "problem_id" => problem_id,
       "solver_instance_id" => solver_instance.id,
       "is_valid" => is_valid,
+      "seed" => seed,
       "computation_time" => computation_time,
       "objective_value" => objective_value,
       "penalized_objective_value" => penalized_objective_value
@@ -343,6 +345,8 @@ defmodule VrpBenchmarkDataService.Solutions do
           start_node_name,
           end_node_name
         )
+
+      IO.inspect(vehicle, label: "Vehikel")
 
       route_data = %{
         "solution_id" => solution.id,

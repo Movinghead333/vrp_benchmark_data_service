@@ -13,7 +13,7 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites.BenchmarkSuite do
 
     many_to_many(:problems, Problem,
       join_through: ProblemsInBenchmarkSuitesRelation,
-      join_keys: [problem_id: :id, benchmark_suite_id: :id],
+      join_keys: [benchmark_suite_id: :id, problem_id: :id],
       on_replace: :delete
     )
 

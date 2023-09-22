@@ -800,9 +800,13 @@ defmodule VrpBenchmarkDataService.Problems do
         on: vehicle.start_node_id == start_node.id,
         join: end_node in Node,
         on: vehicle.end_node_id == end_node.id,
-        where: problem.name >= ^problem_name,
+        where: vehicle.problem_id == problem.id,
+        where: problem.name == ^problem_name,
         where: start_node.name == ^start_node_name,
-        where: end_node.name == ^end_node_name
+        where: start_node.problem_id == problem.id,
+        where: end_node.name == ^end_node_name,
+        where: end_node.problem_id == problem.id,
+        select: vehicle
       )
 
     Repo.one(query)

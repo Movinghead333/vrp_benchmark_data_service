@@ -36,7 +36,7 @@ defmodule VrpBenchmarkDataServiceWeb.Router do
     delete("/problems/:id", ProblemController, :delete)
 
     post("/benchmark_suites", BenchmarkSuiteController, :create)
-    post("/benchmark_suites/remainings_runs", RemainingRunsController, :create)
+    post("/benchmark_suites/remaining_runs", RemainingRunsController, :create)
 
     post("/solvers", SolverController, :create)
 

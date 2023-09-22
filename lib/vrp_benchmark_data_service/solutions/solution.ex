@@ -7,6 +7,7 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
   @foreign_key_type :binary_id
   schema "solutions" do
     field(:computation_time, :float)
+    field(:seed, :integer)
     field(:is_valid, :boolean, default: false)
     field(:objective_value, :float)
     field(:penalized_objective_value, :float)
@@ -22,6 +23,7 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
     solution
     |> cast(attrs, [
       :is_valid,
+      :seed,
       :computation_time,
       :objective_value,
       :penalized_objective_value,
@@ -31,6 +33,7 @@ defmodule VrpBenchmarkDataService.Solutions.Solution do
     ])
     |> validate_required([
       :is_valid,
+      :seed,
       :computation_time,
       :objective_value,
       :penalized_objective_value,

@@ -466,20 +466,18 @@ defmodule VrpBenchmarkDataService.Solvers do
 
   def create_complete_solver(
         %{
-          "name" => name,
-          "version" => version,
+          # "name" => name,
+          # "version" => version,
           "parameter_specs" => parameter_specs
         } = solver_specification
       ) do
     {:ok, solver} = create_solver(solver_specification)
 
-    solver_parameter_specs_map =
-      Enum.reduce(parameter_specs, %{}, fn solver_parameter_spec_data, acc ->
-        solver_parameter_spec_data =
-          Map.put_new(solver_parameter_spec_data, "solver_id", solver.id)
+    Enum.each(parameter_specs, fn solver_parameter_spec_data ->
+      solver_parameter_spec_data = Map.put_new(solver_parameter_spec_data, "solver_id", solver.id)
 
-        {:ok, solver_parameter_spec} = create_solver_parameter_spec(solver_parameter_spec_data)
-      end)
+      {:ok, _solver_parameter_spec} = create_solver_parameter_spec(solver_parameter_spec_data)
+    end)
 
     {:ok, solver}
   end
@@ -487,13 +485,11 @@ defmodule VrpBenchmarkDataService.Solvers do
   @doc """
   Create a new instance for a given solver with a map of parameter settings
   """
-  def create_complete_solver_instance(
-        %{
-          "name" => name,
-          "version" => version,
-          "parameter_settings" => parameter_settings
-        } = solver_instance_specification
-      ) do
+  def create_complete_solver_instance(%{
+        "name" => name,
+        "version" => version,
+        "parameter_settings" => parameter_settings
+      }) do
     solver = get_solver_for_name_and_version(name, version)
 
     {:ok, solver_instance} = create_solver_instance(%{"solver_id" => solver.id})

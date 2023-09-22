@@ -242,8 +242,11 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
   def get_benchmark_suite_for_name(benchmark_suite_name) do
     query =
       from(benchmark_suite in BenchmarkSuite,
+        join: p_in_bms_r in ProblemsInBenchmarkSuitesRelation,
+        on: p_in_bms_r.benchmark_suite_id == benchmark_suite.id,
+        join: p in assoc(benchmark_suite, :problems),
         where: benchmark_suite.name == ^benchmark_suite_name,
-        preload: :problems
+        preload: [problems: p]
       )
 
     Repo.one(query)
@@ -251,12 +254,14 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
 
   def get_open_runs_per_problem_for_benchmark_suite_and_solver_instance(%{
         "benchmark_suite_name" => benchmark_suite_name,
-        "solver_instance_config" => solver_instance_config
+        "solver_instance_spec" => solver_instance_spec
       }) do
     benchmark_suite = get_benchmark_suite_for_name(benchmark_suite_name)
 
     {:ok, solver_instance} =
-      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_config)
+      Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_spec)
+
+    IO.inspect(benchmark_suite, label: "BMS")
 
     existing_solutions_query =
       from(solution in Solution,
@@ -277,6 +282,9 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
       Enum.reduce(benchmark_suite.problems, %{}, fn problem, acc ->
         Map.put_new(acc, problem.name, benchmark_suite.runs_per_problem)
       end)
+
+    IO.inspect(benchmark_suite.problems, label: "Problems")
+    IO.inspect(remaining_runs_per_problem_map)
 
     remaining_runs_per_problem_map =
       Enum.reduce(existing_solutions, remaining_runs_per_problem_map, fn existing_solutions_entry,

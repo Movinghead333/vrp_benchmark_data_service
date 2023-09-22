@@ -27,7 +27,7 @@ IO.inspect(problem_1_complete_problem_data)
 
 # Create solver
 solver_specification = %{
-  "name" => "G_SWO",
+  "name" => "Test_Solver",
   "version" => "1.0.0",
   "parameter_specs" => [
     %{
@@ -40,7 +40,7 @@ solver_specification = %{
 {:ok, solver_1} = Solvers.create_complete_solver(solver_specification)
 
 solver_instance_specifcation = %{
-  "name" => "G_SWO",
+  "name" => "Test_Solver",
   "version" => "1.0.0",
   "parameter_settings" => %{
     "iterations" => "20"
@@ -75,6 +75,7 @@ problem_1_solver_1_instance_1_solution_1_data = %{
   "problem_id" => problem_1.id,
   "solver_instance_id" => solver_1_instance_1.id,
   "is_valid" => true,
+  "seed" => 5,
   "computation_time" => 1.5,
   "objective_value" => 10.0,
   "penalized_objective_value" => 10.0,
