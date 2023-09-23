@@ -9,11 +9,11 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateSolutions do
       add(:computation_time, :float)
       add(:objective_value, :float)
       add(:penalized_objective_value, :float)
-      add(:problem_id, references(:problems, on_delete: :nothing, type: :binary_id))
+      add(:problem_id, references(:problems, on_delete: :delete_all, type: :binary_id))
 
       add(
         :solver_instance_id,
-        references(:solver_instances, on_delete: :nothing, type: :binary_id)
+        references(:solver_instances, on_delete: :delete_all, type: :binary_id)
       )
 
       add(

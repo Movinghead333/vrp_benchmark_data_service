@@ -5,8 +5,12 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateSolverParameterInstances
     create table(:solver_parameter_instances, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :value, :string
-      add :solver_instance_id, references(:solver_instances, on_delete: :nothing, type: :binary_id)
-      add :solver_parameter_spec_id, references(:solver_parameter_specs, on_delete: :nothing, type: :binary_id)
+
+      add :solver_instance_id,
+          references(:solver_instances, on_delete: :delete_all, type: :binary_id)
+
+      add :solver_parameter_spec_id,
+          references(:solver_parameter_specs, on_delete: :delete_all, type: :binary_id)
 
       timestamps()
     end

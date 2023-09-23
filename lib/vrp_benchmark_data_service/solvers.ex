@@ -499,9 +499,6 @@ defmodule VrpBenchmarkDataService.Solvers do
         Map.put(acc, solver_parameter_spec.name, solver_parameter_spec)
       end)
 
-    IO.inspect(solver_parameter_specs_map)
-    IO.inspect(parameter_settings)
-
     Enum.each(parameter_settings, fn {parameter_name, parameter_value} ->
       solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
 

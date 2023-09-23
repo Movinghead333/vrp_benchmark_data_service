@@ -261,8 +261,6 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
     {:ok, solver_instance} =
       Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_spec)
 
-    IO.inspect(benchmark_suite, label: "BMS")
-
     existing_solutions_query =
       from(solution in Solution,
         join: problem in Problem,
@@ -282,9 +280,6 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
       Enum.reduce(benchmark_suite.problems, %{}, fn problem, acc ->
         Map.put_new(acc, problem.name, benchmark_suite.runs_per_problem)
       end)
-
-    IO.inspect(benchmark_suite.problems, label: "Problems")
-    IO.inspect(remaining_runs_per_problem_map)
 
     remaining_runs_per_problem_map =
       Enum.reduce(existing_solutions, remaining_runs_per_problem_map, fn existing_solutions_entry,

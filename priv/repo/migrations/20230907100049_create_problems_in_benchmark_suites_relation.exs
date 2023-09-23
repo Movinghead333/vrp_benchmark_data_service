@@ -4,7 +4,10 @@ defmodule VrpBenchmarkDataService.Repo.Migrations.CreateProblemsInBenchmarkSuite
   def change do
     create table(:problems_in_benchmark_suites_relation, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :benchmark_suite_id, references(:benchmark_suites, on_delete: :nothing, type: :binary_id)
+
+      add :benchmark_suite_id,
+          references(:benchmark_suites, on_delete: :delete_all, type: :binary_id)
+
       add :problem_id, references(:problems, on_delete: :nothing, type: :binary_id)
 
       timestamps()

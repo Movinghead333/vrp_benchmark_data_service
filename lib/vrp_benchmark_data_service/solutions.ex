@@ -346,8 +346,6 @@ defmodule VrpBenchmarkDataService.Solutions do
           end_node_name
         )
 
-      IO.inspect(vehicle, label: "Vehikel")
-
       route_data = %{
         "solution_id" => solution.id,
         "vehicle_id" => vehicle.id,
