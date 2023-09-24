@@ -242,6 +242,15 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
   def get_benchmark_suite_for_name(benchmark_suite_name) do
     query =
       from(benchmark_suite in BenchmarkSuite,
+        where: benchmark_suite.name == ^benchmark_suite_name
+      )
+
+    Repo.one(query)
+  end
+
+  def get_benchmark_suite_with_problems_for_name(benchmark_suite_name) do
+    query =
+      from(benchmark_suite in BenchmarkSuite,
         join: p_in_bms_r in ProblemsInBenchmarkSuitesRelation,
         on: p_in_bms_r.benchmark_suite_id == benchmark_suite.id,
         join: p in assoc(benchmark_suite, :problems),
@@ -256,7 +265,7 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites do
         "benchmark_suite_name" => benchmark_suite_name,
         "solver_instance_spec" => solver_instance_spec
       }) do
-    benchmark_suite = get_benchmark_suite_for_name(benchmark_suite_name)
+    benchmark_suite = get_benchmark_suite_with_problems_for_name(benchmark_suite_name)
 
     {:ok, solver_instance} =
       Solvers.get_solver_instance_for_solver_and_parameters(solver_instance_spec)
