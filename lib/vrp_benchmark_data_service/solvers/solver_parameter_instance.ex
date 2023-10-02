@@ -19,5 +19,10 @@ defmodule VrpBenchmarkDataService.Solvers.SolverParameterInstance do
     solver_parameter_instance
     |> cast(attrs, [:value, :solver_instance_id, :solver_parameter_spec_id])
     |> validate_required([:value, :solver_instance_id, :solver_parameter_spec_id])
+    |> unique_constraint([:solver_instance_id, :solver_parameter_spec_id],
+      message:
+        "A solver_parameter_instance with this solver_instance_id-solver_parameter_spec_id-combination does already exist.",
+      error_key: :unique_solver_instance_id_solver_parameter_spec_id
+    )
   end
 end

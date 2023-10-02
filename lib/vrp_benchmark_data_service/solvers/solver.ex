@@ -21,5 +21,9 @@ defmodule VrpBenchmarkDataService.Solvers.Solver do
     solver
     |> cast(attrs, [:name, :version])
     |> validate_required([:name, :version])
+    |> unique_constraint([:name, :version],
+      message: "A solver with this name-version-combination does already exist.",
+      error_key: :unique_name_version
+    )
   end
 end

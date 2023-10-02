@@ -25,6 +25,12 @@ IO.inspect(problem_1_complete_problem_data)
 
 {:ok, problem_1} = Problems.create_complete_problem(problem_1_complete_problem_data)
 
+IO.inspect(
+  Problems.create_problem(%{
+    name: "Test Problem 1"
+  })
+)
+
 # Create solver
 solver_specification = %{
   "name" => "Test_Solver",

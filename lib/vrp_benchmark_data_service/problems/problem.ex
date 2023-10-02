@@ -25,5 +25,9 @@ defmodule VrpBenchmarkDataService.Problems.Problem do
     problem
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> unique_constraint(:name,
+      message: "A problem with this name does already exist.",
+      error_key: :unique_name
+    )
   end
 end

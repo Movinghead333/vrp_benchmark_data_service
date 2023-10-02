@@ -46,5 +46,9 @@ defmodule VrpBenchmarkDataService.Problems.Node do
       :latest_departure_time,
       :problem_id
     ])
+    |> unique_constraint([:problem_id, :name],
+      message: "A node with this problem_id-name-combination does already exist.",
+      error_key: :unique_problem_id_name
+    )
   end
 end

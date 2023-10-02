@@ -21,5 +21,9 @@ defmodule VrpBenchmarkDataService.Problems.MetricEntry do
     metric_entry
     |> cast(attrs, [:travel_time, :problem_id, :from_node_id, :to_node_id])
     |> validate_required([:travel_time, :problem_id, :from_node_id, :to_node_id])
+    |> unique_constraint([:problem_id, :from_node_id, :to_node_id],
+      message: "A metric_entry with this problem_id-from_node_id-to_node_id does already exist.",
+      error_key: :unique_proble_id_from_node_id_to_node_id
+    )
   end
 end

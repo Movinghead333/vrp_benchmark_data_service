@@ -466,11 +466,13 @@ defmodule VrpBenchmarkDataService.Solvers do
 
   def create_complete_solver(
         %{
-          # "name" => name,
-          # "version" => version,
+          "name" => name,
+          "version" => version,
           "parameter_specs" => parameter_specs
         } = solver_specification
       ) do
+    existing_solver = get_solver_for_name_and_version(name, version)
+
     {:ok, solver} = create_solver(solver_specification)
 
     Enum.each(parameter_specs, fn solver_parameter_spec_data ->

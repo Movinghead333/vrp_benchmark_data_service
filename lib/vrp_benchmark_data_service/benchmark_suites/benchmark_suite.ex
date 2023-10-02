@@ -27,5 +27,9 @@ defmodule VrpBenchmarkDataService.BenchmarkSuites.BenchmarkSuite do
     benchmark_suite
     |> cast(attrs, [:name, :runs_per_problem])
     |> validate_required([:name, :runs_per_problem])
+    |> unique_constraint(:name,
+      message: "A benchmark_suite with this name does already exist.",
+      error_key: :unique_name
+    )
   end
 end
