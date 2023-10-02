@@ -471,17 +471,20 @@ defmodule VrpBenchmarkDataService.Solvers do
           "parameter_specs" => parameter_specs
         } = solver_specification
       ) do
-    existing_solver = get_solver_for_name_and_version(name, version)
+    case create_solver(solver_specification) do
+      {:ok, solver} ->
+        Enum.each(parameter_specs, fn solver_parameter_spec_data ->
+          solver_parameter_spec_data =
+            Map.put_new(solver_parameter_spec_data, "solver_id", solver.id)
 
-    {:ok, solver} = create_solver(solver_specification)
+          {:ok, _solver_parameter_spec} = create_solver_parameter_spec(solver_parameter_spec_data)
+        end)
 
-    Enum.each(parameter_specs, fn solver_parameter_spec_data ->
-      solver_parameter_spec_data = Map.put_new(solver_parameter_spec_data, "solver_id", solver.id)
+        {:ok, solver}
 
-      {:ok, _solver_parameter_spec} = create_solver_parameter_spec(solver_parameter_spec_data)
-    end)
-
-    {:ok, solver}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
