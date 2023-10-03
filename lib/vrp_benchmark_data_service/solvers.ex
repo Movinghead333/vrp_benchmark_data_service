@@ -409,8 +409,8 @@ defmodule VrpBenchmarkDataService.Solvers do
   end
 
   def get_solver_instance_for_solver_and_parameters(%{
-        "solver_name" => solver_name,
-        "solver_version" => solver_version,
+        "name" => solver_name,
+        "version" => solver_version,
         "parameter_settings" => parameter_settings
       }) do
     # Get matching solver from db
@@ -458,7 +458,7 @@ defmodule VrpBenchmarkDataService.Solvers do
       end)
 
     if is_nil(solver_instance) do
-      {:error, "Solver instance could not be found."}
+      {:error, :solver_instance_does_not_exist}
     else
       {:ok, solver_instance}
     end
@@ -466,8 +466,8 @@ defmodule VrpBenchmarkDataService.Solvers do
 
   def create_complete_solver(
         %{
-          "name" => name,
-          "version" => version,
+          "name" => _name,
+          "version" => _version,
           "parameter_specs" => parameter_specs
         } = solver_specification
       ) do
@@ -490,34 +490,44 @@ defmodule VrpBenchmarkDataService.Solvers do
   @doc """
   Create a new instance for a given solver with a map of parameter settings
   """
-  def create_complete_solver_instance(%{
-        "name" => name,
-        "version" => version,
-        "parameter_settings" => parameter_settings
-      }) do
+  def create_complete_solver_instance(
+        %{
+          "name" => name,
+          "version" => version,
+          "parameter_settings" => parameter_settings
+        } = solver_instance_spec
+      ) do
     solver = get_solver_for_name_and_version(name, version)
 
-    {:ok, solver_instance} = create_solver_instance(%{"solver_id" => solver.id})
+    existing_solver_instance = get_solver_instance_for_solver_and_parameters(solver_instance_spec)
 
-    solver_parameter_specs_map =
-      Enum.reduce(solver.solver_parameter_specs, %{}, fn solver_parameter_spec, acc ->
-        Map.put(acc, solver_parameter_spec.name, solver_parameter_spec)
-      end)
+    case existing_solver_instance do
+      {:ok, _solver_instance} ->
+        {:error, :solver_instance_does_already_exist}
 
-    Enum.each(parameter_settings, fn {parameter_name, parameter_value} ->
-      solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
+      {:error, :solver_instance_does_not_exist} ->
+        {:ok, solver_instance} = create_solver_instance(%{"solver_id" => solver.id})
 
-      solver_parameter_instance_data = %{
-        "solver_instance_id" => solver_instance.id,
-        "solver_parameter_spec_id" => solver_parameter_spec_id,
-        "value" => parameter_value
-      }
+        solver_parameter_specs_map =
+          Enum.reduce(solver.solver_parameter_specs, %{}, fn solver_parameter_spec, acc ->
+            Map.put(acc, solver_parameter_spec.name, solver_parameter_spec)
+          end)
 
-      {:ok, _solver_parameter_instance} =
-        create_solver_parameter_instance(solver_parameter_instance_data)
-    end)
+        Enum.each(parameter_settings, fn {parameter_name, parameter_value} ->
+          solver_parameter_spec_id = Map.get(solver_parameter_specs_map, parameter_name).id
 
-    {:ok, solver_instance}
+          solver_parameter_instance_data = %{
+            "solver_instance_id" => solver_instance.id,
+            "solver_parameter_spec_id" => solver_parameter_spec_id,
+            "value" => parameter_value
+          }
+
+          {:ok, _solver_parameter_instance} =
+            create_solver_parameter_instance(solver_parameter_instance_data)
+        end)
+
+        {:ok, solver_instance}
+    end
   end
 
   # --------------------- Custom Functions End ---------------------
